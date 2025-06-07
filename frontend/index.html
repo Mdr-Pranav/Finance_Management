@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="dark-mode.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg">
+            <div class="p-4">
+                <div class="flex items-center justify-between p-4 bg-white shadow">
+                    <h1 class="text-2xl font-bold text-gray-800">Personal Finance Manager</h1>
+                    <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+            <nav class="mt-4">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="transactions">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transactions</span>
+                </a>
+                <a href="#" class="nav-item" data-page="budget">
+                    <i class="fas fa-wallet"></i>
+                    <span>Budget</span>
+                </a>
+                <a href="#" class="nav-item" data-page="goals">
+                    <i class="fas fa-bullseye"></i>
+                    <span>Goals</span>
+                </a>
+                <a href="#" class="nav-item" data-page="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page active">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Balance Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-gray-500 text-sm">Total Balance</h3>
+                        <p class="text-3xl font-bold text-gray-800" id="totalBalance">0.00</p>
+                    </div>
+                    <!-- Income Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-gray-500 text-sm">Total Income</h3>
+                        <p class="text-3xl font-bold text-green-600" id="monthlyIncome">0.00</p>
+                    </div>
+                    <!-- Expenses Card -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-gray-500 text-sm">Total Expenses</h3>
+                        <p class="text-3xl font-bold text-red-600" id="monthlyExpenses">0.00</p>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="mt-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Recent Transactions</h2>
+                        <button id="addTransactionBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Add Transaction
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentTransactions" class="divide-y divide-gray-200">
+                                <!-- Transactions will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reports" class="page">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Financial Reports</h2>
+                    
+                    <!-- Date Range Selector -->
+                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                        <div class="flex items-center space-x-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="reportStartDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="reportEndDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Category</label>
+                                <select id="reportCategory" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button id="generateReport" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                    Generate Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Total Income</h3>
+                            <p class="text-3xl font-bold text-green-600" id="reportTotalIncome">0.00</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Total Expenses</h3>
+                            <p class="text-3xl font-bold text-red-600" id="reportTotalExpenses">0.00</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Net Balance</h3>
+                            <p class="text-3xl font-bold text-gray-800" id="reportNetBalance">0.00</p>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Income vs Expenses Chart -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Income vs Expenses</h3>
+                            <canvas id="incomeExpensesChart"></canvas>
+                        </div>
+                        <!-- Category Distribution Chart -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Expense Categories</h3>
+                            <canvas id="categoryDistributionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Transactions Table -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Detailed Transactions</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportTransactions" class="divide-y divide-gray-200">
+                                    <!-- Transactions will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Page -->
+            <div id="transactions" class="page">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">All Transactions</h2>
+                        <button id="addTransactionBtn2" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Add Transaction
+                        </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="transactionStartDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="transactionEndDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Category</label>
+                                <select id="transactionCategory" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Categories</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Bills">Bills</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Type</label>
+                                <select id="transactionType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Types</option>
+                                    <option value="income">Income</option>
+                                    <option value="expense">Expense</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transactions Table -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allTransactions" class="divide-y divide-gray-200">
+                                <!-- Transactions will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budget Page -->
+            <div id="budget" class="page">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Budget Management</h2>
+                        <button id="addBudgetBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Add Budget
+                        </button>
+                    </div>
+
+                    <!-- Budget Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Total Budget</h3>
+                            <p class="text-3xl font-bold text-gray-800">$<span id="totalBudget">0.00</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Total Spent</h3>
+                            <p class="text-3xl font-bold text-red-600">$<span id="totalSpent">0.00</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Remaining</h3>
+                            <p class="text-3xl font-bold text-green-600">$<span id="remainingBudget">0.00</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Budget Categories -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Budget Categories</h3>
+                        </div>
+                        <div class="divide-y divide-gray-200">
+                            <div id="budgetCategories">
+                                <!-- Budget categories will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals Page -->
+            <div id="goals" class="page">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Financial Goals</h2>
+                        <button id="addGoalBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Add Goal
+                        </button>
+                    </div>
+
+                    <!-- Goals Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Active Goals</h3>
+                            <p class="text-3xl font-bold text-gray-800"><span id="activeGoals">0</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Completed Goals</h3>
+                            <p class="text-3xl font-bold text-green-600"><span id="completedGoals">0</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Total Saved</h3>
+                            <p class="text-3xl font-bold text-blue-600">$<span id="totalSaved">0.00</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Goals List -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Your Goals</h3>
+                        </div>
+                        <div id="goalsList" class="divide-y divide-gray-200">
+                            <!-- Goals will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings" class="page">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold mb-6">Settings</h2>
+
+                    <!-- General Settings -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">General Settings</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Currency</label>
+                                    <select id="currency" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="USD">USD ($)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="GBP">GBP (£)</option>
+                                        <option value="INR">INR (₹)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Theme</label>
+                                    <select id="theme" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="light">Light</option>
+                                        <option value="dark">Dark</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories Management -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Categories Management</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-4">
+                                    <input type="text" id="newCategory" placeholder="New category name" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <button id="addCategoryBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                        Add Category
+                                    </button>
+                                </div>
+                                <div id="categoriesList" class="space-y-2">
+                                    <!-- Categories will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Management -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Data Management</h3>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-4">
+                                <div class="flex flex-wrap gap-4">
+                                    <button id="exportDataBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                                        Export Data
+                                    </button>
+                                    <button id="importDataBtn" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
+                                        Import Data
+                                    </button>
+                                    <button id="clearDataBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                                        Clear All Data
+                                    </button>
+                                    <button id="clearCacheBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                        Clear Cache & Reload
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other pages will be added here -->
+        </main>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="transactionModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold">Add Transaction</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="transactionForm" class="p-4">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+                        Amount
+                    </label>
+                    <input type="number" id="amount" name="amount" step="0.01" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                        Description
+                    </label>
+                    <input type="text" id="description" name="description" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="type">
+                        Type
+                    </label>
+                    <select id="type" name="type" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <div id="categoryContainer" class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+                        Category
+                    </label>
+                    <select id="category" name="category" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="Food">Food</option>
+                        <option value="Transportation">Transportation</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Bills">Bills</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        Save Transaction
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html> 

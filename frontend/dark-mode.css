@@ -1,0 +1,135 @@
+/* Dark Mode Styles */
+[data-theme="dark"] {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #a0aec0;
+    --border-color: #404040;
+    --hover-bg: #3d3d3d;
+    --card-bg: #2d2d2d;
+    --modal-bg: #2d2d2d;
+    --input-bg: #404040;
+    --input-border: #505050;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .bg-gray-100 {
+    background-color: var(--bg-primary) !important;
+}
+
+[data-theme="dark"] .bg-gray-50 {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .text-gray-500 {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .text-gray-700 {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .text-gray-800 {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .border-gray-200 {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .divide-gray-200 > * {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .nav-item {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .nav-item:hover {
+    background-color: var(--hover-bg);
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .nav-item.active {
+    background-color: var(--hover-bg);
+    color: #60a5fa;
+    border-right-color: #60a5fa;
+}
+
+[data-theme="dark"] .modal {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: var(--modal-bg);
+}
+
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] select {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] input[type="text"]:focus,
+[data-theme="dark"] input[type="number"]:focus,
+[data-theme="dark"] input[type="date"]:focus,
+[data-theme="dark"] select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+[data-theme="dark"] table {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] th {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] td {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .shadow {
+    box-shadow: 0 1px 3px 0 var(--shadow-color), 0 1px 2px 0 var(--shadow-color) !important;
+}
+
+/* Dark mode transitions */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.bg-white,
+.bg-gray-100,
+.bg-gray-50,
+.text-gray-500,
+.text-gray-700,
+.text-gray-800,
+.border-gray-200,
+.divide-gray-200 > *,
+.nav-item,
+.modal,
+.modal-content,
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+table,
+th,
+td,
+.shadow {
+    transition: all 0.3s ease;
+} 
