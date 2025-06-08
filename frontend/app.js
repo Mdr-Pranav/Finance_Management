@@ -146,6 +146,7 @@ const DataManager = {
             const currentYear = now.getFullYear();
             console.log('Current month/year:', currentMonth, currentYear);
 
+            // Filter for current month transactions for monthly income/expenses
             const monthlyTransactions = transactions.filter(t => {
                 const date = new Date(t.date);
                 const isCurrentMonth = date.getMonth() === currentMonth && date.getFullYear() === currentYear;
@@ -154,26 +155,55 @@ const DataManager = {
             });
             console.log('Monthly transactions:', monthlyTransactions);
 
-            const income = monthlyTransactions
+            // Calculate monthly income and expenses (current month only)
+            const monthlyIncome = monthlyTransactions
                 .filter(t => t.type === 'income')
                 .reduce((sum, t) => {
                     const amount = Number(t.amount);
-                    console.log('Income transaction:', t.description, amount);
+                    console.log('Monthly income transaction:', t.description, amount);
                     return sum + amount;
                 }, 0);
 
-            const expenses = monthlyTransactions
+            const monthlyExpenses = monthlyTransactions
                 .filter(t => t.type === 'expense')
                 .reduce((sum, t) => {
                     const amount = Number(t.amount);
-                    console.log('Expense transaction:', t.description, amount);
+                    console.log('Monthly expense transaction:', t.description, amount);
                     return sum + amount;
                 }, 0);
 
-            const balance = income - expenses;
+            // Calculate total balance from ALL transactions over time
+            const totalIncome = transactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => {
+                    const amount = Number(t.amount);
+                    console.log('Total income transaction:', t.description, amount);
+                    return sum + amount;
+                }, 0);
 
-            console.log('Calculated stats:', { income, expenses, balance });
-            return { income, expenses, balance };
+            const totalExpenses = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => {
+                    const amount = Number(t.amount);
+                    console.log('Total expense transaction:', t.description, amount);
+                    return sum + amount;
+                }, 0);
+
+            const totalBalance = totalIncome - totalExpenses;
+
+            console.log('Calculated stats:', { 
+                monthlyIncome, 
+                monthlyExpenses, 
+                totalIncome, 
+                totalExpenses, 
+                totalBalance 
+            });
+            
+            return { 
+                income: monthlyIncome, 
+                expenses: monthlyExpenses, 
+                balance: totalBalance 
+            };
         } catch (error) {
             console.error('Error calculating monthly stats:', error);
             return { income: 0, expenses: 0, balance: 0 };
@@ -437,6 +467,22 @@ const SubscriptionsManager = {
 
 // UI Manager
 const UIManager = {
+    // Pagination state for transactions
+    transactionsPagination: {
+        currentPage: 1,
+        perPage: 100,
+        totalItems: 0,
+        totalPages: 0
+    },
+    
+    // Pagination state for reports
+    reportsPagination: {
+        currentPage: 1,
+        perPage: 50,
+        totalItems: 0,
+        totalPages: 0
+    },
+
     // Navigation
     initNavigation() {
         const navItems = document.querySelectorAll('.nav-item');
@@ -558,35 +604,285 @@ const UIManager = {
             };
             const symbol = currencySymbols[currency];
 
-            // Update elements if they exist
+            // Update basic elements if they exist
             if (elements.balance) {
                 const balance = stats.balance || 0;
-                elements.balance.textContent = `${symbol}${balance.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })}`;
+                elements.balance.textContent = this.formatCurrencyForDisplay(balance, symbol);
                 console.log('Updated balance:', balance);
             }
 
             if (elements.income) {
                 const income = stats.income || 0;
-                elements.income.textContent = `${symbol}${income.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })}`;
+                elements.income.textContent = this.formatCurrencyForDisplay(income, symbol);
                 console.log('Updated income:', income);
             }
 
             if (elements.expenses) {
                 const expenses = stats.expenses || 0;
-                elements.expenses.textContent = `${symbol}${expenses.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })}`;
+                elements.expenses.textContent = this.formatCurrencyForDisplay(expenses, symbol);
                 console.log('Updated expenses:', expenses);
             }
+
+            // Update additional summary stats
+            await this.updateDashboardSummaryStats(symbol);
+            await this.updateDashboardInsights(symbol);
+            await this.updateDashboardHealthSummary(symbol);
+
         } catch (error) {
             console.error('Error updating dashboard:', error);
+        }
+    },
+
+    async updateDashboardSummaryStats(symbol) {
+        try {
+            const transactions = await DataManager.getTransactions();
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            // Filter current month transactions
+            const monthlyTransactions = transactions.filter(t => {
+                const date = new Date(t.date);
+                return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+            });
+
+            const monthlyExpenses = monthlyTransactions.filter(t => t.type === 'expense');
+            const monthlyIncome = monthlyTransactions.filter(t => t.type === 'income');
+
+            const totalIncome = monthlyIncome.reduce((sum, t) => sum + Number(t.amount), 0);
+            const totalExpenses = monthlyExpenses.reduce((sum, t) => sum + Number(t.amount), 0);
+
+            // Savings Rate
+            const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome * 100) : 0;
+            console.log('Savings Rate Debug:', {
+                totalIncome,
+                totalExpenses,
+                savingsRate,
+                monthlyTransactions: monthlyTransactions.length,
+                currentMonth,
+                currentYear
+            });
+            const savingsRateElement = document.getElementById('savingsRate');
+            if (savingsRateElement) {
+                const displayValue = this.formatNumberForDisplay(savingsRate.toFixed(1), '%');
+                console.log('Savings Rate Display:', displayValue);
+                savingsRateElement.textContent = displayValue;
+                savingsRateElement.className = `text-2xl font-bold ${savingsRate >= 20 ? 'text-green-600' : savingsRate >= 10 ? 'text-yellow-600' : 'text-red-600'}`;
+            } else {
+                console.log('Savings Rate Element not found!');
+            }
+
+            // Daily Average Spending
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const dailyAverage = totalExpenses / daysInMonth;
+            const dailyAverageElement = document.getElementById('dailyAverage');
+            if (dailyAverageElement) {
+                dailyAverageElement.textContent = this.formatCurrencyForDisplay(dailyAverage, symbol, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+            }
+
+            // Transaction Count
+            const transactionCountElement = document.getElementById('transactionCount');
+            if (transactionCountElement) {
+                transactionCountElement.textContent = this.formatNumberForDisplay(monthlyTransactions.length.toString());
+            }
+
+            // Top Spending Category
+            const categorySpending = {};
+            monthlyExpenses.forEach(t => {
+                categorySpending[t.category] = (categorySpending[t.category] || 0) + Number(t.amount);
+            });
+
+            const topCategory = Object.entries(categorySpending)
+                .sort(([,a], [,b]) => b - a)[0];
+
+            const topCategoryElement = document.getElementById('topCategory');
+            if (topCategoryElement) {
+                if (topCategory) {
+                    const categoryAmount = this.formatCurrencyForDisplay(topCategory[1], symbol, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    });
+                    topCategoryElement.textContent = `${topCategory[0]} (${categoryAmount})`;
+                } else {
+                    topCategoryElement.textContent = 'None';
+                }
+            }
+
+        } catch (error) {
+            console.error('Error updating dashboard summary stats:', error);
+        }
+    },
+
+    async updateDashboardInsights(symbol) {
+        try {
+            const transactions = await DataManager.getTransactions();
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            // Filter current month transactions for largest expense (monthly context makes sense)
+            const monthlyTransactions = transactions.filter(t => {
+                const date = new Date(t.date);
+                return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+            });
+
+            const monthlyExpenses = monthlyTransactions.filter(t => t.type === 'expense');
+            
+            // For largest income, use all-time data since income might be irregular
+            const allIncome = transactions.filter(t => t.type === 'income');
+
+            // Largest Expense (current month)
+            let largestExpense = {};
+            if (monthlyExpenses.length > 0) {
+                largestExpense = monthlyExpenses.reduce((max, t) => 
+                    Number(t.amount) > Number(max.amount || 0) ? t : max);
+            }
+
+            const largestExpenseElement = document.getElementById('largestExpense');
+            const largestExpenseCategoryElement = document.getElementById('largestExpenseCategory');
+            if (largestExpenseElement && largestExpenseCategoryElement) {
+                if (largestExpense.amount) {
+                    largestExpenseElement.textContent = this.formatCurrencyForDisplay(largestExpense.amount, symbol);
+                    largestExpenseCategoryElement.textContent = `${largestExpense.category} - ${largestExpense.description}`;
+                } else {
+                    largestExpenseElement.textContent = this.formatCurrencyForDisplay(0, symbol);
+                    largestExpenseCategoryElement.textContent = 'No expenses this month';
+                }
+            }
+
+            // Largest Income (all-time)
+            let largestIncome = {};
+            if (allIncome.length > 0) {
+                largestIncome = allIncome.reduce((max, t) => 
+                    Number(t.amount) > Number(max.amount || 0) ? t : max);
+            }
+
+            const largestIncomeElement = document.getElementById('largestIncome');
+            const largestIncomeDescriptionElement = document.getElementById('largestIncomeDescription');
+            if (largestIncomeElement && largestIncomeDescriptionElement) {
+                if (largestIncome.amount) {
+                    largestIncomeElement.textContent = this.formatCurrencyForDisplay(largestIncome.amount, symbol);
+                    largestIncomeDescriptionElement.textContent = `${largestIncome.description} (${new Date(largestIncome.date).toLocaleDateString()})`;
+                } else {
+                    largestIncomeElement.textContent = this.formatCurrencyForDisplay(0, symbol);
+                    largestIncomeDescriptionElement.textContent = 'No income recorded';
+                }
+            }
+
+            // Monthly Trend (current vs last month)
+            const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+            const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+            const lastMonthTransactions = transactions.filter(t => {
+                const date = new Date(t.date);
+                return date.getMonth() === lastMonth && date.getFullYear() === lastMonthYear;
+            });
+
+            const currentSpending = monthlyTransactions.filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + Number(t.amount), 0);
+            const lastMonthSpending = lastMonthTransactions.filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + Number(t.amount), 0);
+
+            const monthlyTrendElement = document.getElementById('monthlyTrend');
+            const monthlyTrendDescriptionElement = document.getElementById('monthlyTrendDescription');
+            
+            if (monthlyTrendElement && monthlyTrendDescriptionElement) {
+                if (lastMonthSpending > 0) {
+                    const change = currentSpending - lastMonthSpending;
+                    const percentChange = (change / lastMonthSpending * 100);
+                    
+                    const changeAmount = this.formatCurrencyForDisplay(Math.abs(change), symbol, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    });
+                    
+                    monthlyTrendElement.textContent = `${change >= 0 ? '+' : ''}${changeAmount}`;
+                    monthlyTrendElement.className = `text-xl font-bold ${change <= 0 ? 'text-green-600' : 'text-red-600'}`;
+                    
+                    const percentDisplay = this.formatNumberForDisplay(Math.abs(percentChange).toFixed(1), '%');
+                    monthlyTrendDescriptionElement.textContent = `${change <= 0 ? 'Saved' : 'More spending'} (${percentDisplay})`;
+                } else {
+                    monthlyTrendElement.textContent = '--';
+                    monthlyTrendElement.className = 'text-xl font-bold text-gray-600';
+                    monthlyTrendDescriptionElement.textContent = 'No comparison data';
+                }
+            }
+
+        } catch (error) {
+            console.error('Error updating dashboard insights:', error);
+        }
+    },
+
+    async updateDashboardHealthSummary(symbol) {
+        try {
+            // Update debt summary
+            const debts = await DebtsManager.fetchDebts().catch(() => []);
+            const pendingDebts = debts.filter(d => d.status === 'pending');
+            const iOwe = pendingDebts.filter(d => d.type === 'owe').reduce((sum, d) => sum + Number(d.amount), 0);
+            const owedToMe = pendingDebts.filter(d => d.type === 'owed').reduce((sum, d) => sum + Number(d.amount), 0);
+            const netDebt = owedToMe - iOwe;
+
+            const dashboardIOweElement = document.getElementById('dashboardIOwe');
+            const dashboardOwedToMeElement = document.getElementById('dashboardOwedToMe');
+            const dashboardNetDebtElement = document.getElementById('dashboardNetDebt');
+
+            if (dashboardIOweElement) {
+                dashboardIOweElement.textContent = this.formatCurrencyForDisplay(iOwe, symbol);
+            }
+            if (dashboardOwedToMeElement) {
+                dashboardOwedToMeElement.textContent = this.formatCurrencyForDisplay(owedToMe, symbol);
+            }
+            if (dashboardNetDebtElement) {
+                dashboardNetDebtElement.textContent = this.formatCurrencyForDisplay(netDebt, symbol);
+                dashboardNetDebtElement.className = `text-sm font-bold ${netDebt >= 0 ? 'text-green-600' : 'text-red-600'}`;
+            }
+
+            // Update subscription summary
+            const subscriptionSummary = await SubscriptionsManager.fetchSubscriptionsSummary().catch(() => ({
+                total_active: 0,
+                monthly_cost: 0,
+                upcoming_this_week: 0
+            }));
+
+            const dashboardActiveSubscriptionsElement = document.getElementById('dashboardActiveSubscriptions');
+            const dashboardMonthlyCostElement = document.getElementById('dashboardMonthlyCost');
+            const dashboardDueThisWeekElement = document.getElementById('dashboardDueThisWeek');
+
+            if (dashboardActiveSubscriptionsElement) {
+                dashboardActiveSubscriptionsElement.textContent = this.formatNumberForDisplay(subscriptionSummary.total_active.toString());
+            }
+            if (dashboardMonthlyCostElement) {
+                dashboardMonthlyCostElement.textContent = this.formatCurrencyForDisplay(subscriptionSummary.monthly_cost, symbol);
+            }
+            if (dashboardDueThisWeekElement) {
+                dashboardDueThisWeekElement.textContent = this.formatNumberForDisplay(subscriptionSummary.upcoming_this_week.toString());
+            }
+
+            // Update budget status
+            const expenseLimits = await ExpenseLimitsManager.fetchExpenseLimitsStatus().catch(() => []);
+            const activeLimits = expenseLimits.length;
+            const exceededLimits = expenseLimits.filter(l => l.exceeded).length;
+            const onTrackLimits = activeLimits - exceededLimits;
+
+            const dashboardActiveLimitsElement = document.getElementById('dashboardActiveLimits');
+            const dashboardExceededLimitsElement = document.getElementById('dashboardExceededLimits');
+            const dashboardOnTrackLimitsElement = document.getElementById('dashboardOnTrackLimits');
+
+            if (dashboardActiveLimitsElement) {
+                dashboardActiveLimitsElement.textContent = this.formatNumberForDisplay(activeLimits.toString());
+            }
+            if (dashboardExceededLimitsElement) {
+                dashboardExceededLimitsElement.textContent = this.formatNumberForDisplay(exceededLimits.toString());
+            }
+            if (dashboardOnTrackLimitsElement) {
+                dashboardOnTrackLimitsElement.textContent = this.formatNumberForDisplay(onTrackLimits.toString());
+            }
+
+        } catch (error) {
+            console.error('Error updating dashboard health summary:', error);
         }
     },
 
@@ -706,12 +1002,23 @@ const UIManager = {
             );
         }
 
-        // Don't sort here since we want to maintain the order from the backend (most recently entered first)
-        // filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Update pagination state
+        this.transactionsPagination.totalItems = filteredTransactions.length;
+        this.transactionsPagination.totalPages = Math.ceil(filteredTransactions.length / this.transactionsPagination.perPage);
+        
+        // Ensure current page is valid
+        if (this.transactionsPagination.currentPage > this.transactionsPagination.totalPages) {
+            this.transactionsPagination.currentPage = 1;
+        }
+
+        // Calculate pagination range
+        const startIndex = (this.transactionsPagination.currentPage - 1) * this.transactionsPagination.perPage;
+        const endIndex = startIndex + this.transactionsPagination.perPage;
+        const paginatedTransactions = filteredTransactions.slice(startIndex, endIndex);
 
         // Update the table
         allTransactions.innerHTML = '';
-        filteredTransactions.forEach(transaction => {
+        paginatedTransactions.forEach(transaction => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap">${new Date(transaction.date).toLocaleDateString()}</td>
@@ -733,6 +1040,10 @@ const UIManager = {
             allTransactions.appendChild(row);
         });
 
+        // Update pagination controls
+        this.updateTransactionsPaginationInfo();
+        this.updateTransactionsPaginationControls();
+
         // Add delete event listeners
         document.querySelectorAll('.delete-transaction').forEach(button => {
             button.addEventListener('click', async () => {
@@ -752,6 +1063,111 @@ const UIManager = {
         });
     },
 
+    updateTransactionsPaginationInfo() {
+        const infoElement = document.getElementById('transactionsPaginationInfo');
+        if (!infoElement) return;
+
+        const { currentPage, perPage, totalItems, totalPages } = this.transactionsPagination;
+        const startItem = totalItems === 0 ? 0 : (currentPage - 1) * perPage + 1;
+        const endItem = Math.min(currentPage * perPage, totalItems);
+
+        infoElement.textContent = `Showing ${startItem}-${endItem} of ${totalItems} transactions`;
+    },
+
+    updateTransactionsPaginationControls() {
+        const controlsElement = document.getElementById('transactionsPaginationControls');
+        if (!controlsElement) return;
+
+        const { currentPage, totalPages } = this.transactionsPagination;
+        
+        let controlsHTML = '';
+
+        // Previous button
+        controlsHTML += `
+            <button id="prevTransactionsPage" 
+                    class="px-3 py-1 rounded border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}" 
+                    ${currentPage === 1 ? 'disabled' : ''}>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        `;
+
+        // Page numbers
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        // First page and ellipsis
+        if (startPage > 1) {
+            controlsHTML += `
+                <button class="pagination-page px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-50" data-page="1">1</button>
+            `;
+            if (startPage > 2) {
+                controlsHTML += `<span class="px-2 text-gray-500">...</span>`;
+            }
+        }
+
+        // Page numbers
+        for (let i = startPage; i <= endPage; i++) {
+            controlsHTML += `
+                <button class="pagination-page px-3 py-1 rounded border ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}" 
+                        data-page="${i}">${i}</button>
+            `;
+        }
+
+        // Last page and ellipsis
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                controlsHTML += `<span class="px-2 text-gray-500">...</span>`;
+            }
+            controlsHTML += `
+                <button class="pagination-page px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-50" data-page="${totalPages}">${totalPages}</button>
+            `;
+        }
+
+        // Next button
+        controlsHTML += `
+            <button id="nextTransactionsPage" 
+                    class="px-3 py-1 rounded border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}" 
+                    ${currentPage === totalPages ? 'disabled' : ''}>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        `;
+
+        controlsElement.innerHTML = controlsHTML;
+
+        // Add event listeners
+        document.getElementById('prevTransactionsPage')?.addEventListener('click', () => {
+            if (this.transactionsPagination.currentPage > 1) {
+                this.transactionsPagination.currentPage--;
+                this.refreshTransactionsPagination();
+            }
+        });
+
+        document.getElementById('nextTransactionsPage')?.addEventListener('click', () => {
+            if (this.transactionsPagination.currentPage < this.transactionsPagination.totalPages) {
+                this.transactionsPagination.currentPage++;
+                this.refreshTransactionsPagination();
+            }
+        });
+
+        document.querySelectorAll('.pagination-page').forEach(button => {
+            button.addEventListener('click', () => {
+                const page = parseInt(button.dataset.page);
+                this.transactionsPagination.currentPage = page;
+                this.refreshTransactionsPagination();
+            });
+        });
+    },
+
+    async refreshTransactionsPagination() {
+        const transactions = await DataManager.getTransactions();
+        this.updateFilteredTransactions(transactions);
+    },
+
     initTransactionFilters() {
         const filterInputs = [
             'transactionStartDate',
@@ -762,10 +1178,23 @@ const UIManager = {
 
         filterInputs.forEach(inputId => {
             document.getElementById(inputId).addEventListener('change', async () => {
+                // Reset to first page when filters change
+                this.transactionsPagination.currentPage = 1;
                 const transactions = await DataManager.getTransactions();
                 this.updateFilteredTransactions(transactions);
             });
         });
+
+        // Handle per-page selector
+        const perPageSelect = document.getElementById('transactionsPerPage');
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', async () => {
+                this.transactionsPagination.perPage = parseInt(perPageSelect.value);
+                this.transactionsPagination.currentPage = 1; // Reset to first page
+                const transactions = await DataManager.getTransactions();
+                this.updateFilteredTransactions(transactions);
+            });
+        }
     },
 
     // Reports
@@ -773,6 +1202,7 @@ const UIManager = {
         const generateReportBtn = document.getElementById('generateReport');
         const startDateInput = document.getElementById('reportStartDate');
         const endDateInput = document.getElementById('reportEndDate');
+        const categoryInput = document.getElementById('reportCategory');
 
         // Set default date range to current month
         const now = new Date();
@@ -782,16 +1212,43 @@ const UIManager = {
         startDateInput.value = firstDay.toISOString().split('T')[0];
         endDateInput.value = lastDay.toISOString().split('T')[0];
 
-        generateReportBtn.addEventListener('click', () => this.generateReport());
+        generateReportBtn.addEventListener('click', () => this.generateReport(true));
+        
+        // Add listeners for filter changes to reset pagination
+        [startDateInput, endDateInput, categoryInput].forEach(input => {
+            if (input) {
+                input.addEventListener('change', () => this.generateReport(true));
+            }
+        });
+        
+        // Initialize pagination controls
+        this.initReportPagination();
         
         // Generate initial report
-        this.generateReport();
+        this.generateReport(true);
+    },
+    
+    initReportPagination() {
+        // Handle per-page selector
+        const perPageSelect = document.getElementById('reportTransactionsPerPage');
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', async () => {
+                this.reportsPagination.perPage = parseInt(perPageSelect.value);
+                this.reportsPagination.currentPage = 1; // Reset to first page
+                this.generateReport();
+            });
+        }
     },
 
-    async generateReport() {
+    async generateReport(resetPagination = false) {
         const startDate = document.getElementById('reportStartDate').value;
         const endDate = document.getElementById('reportEndDate').value;
         const category = document.getElementById('reportCategory').value;
+        
+        // Reset pagination when filters change
+        if (resetPagination) {
+            this.reportsPagination.currentPage = 1;
+        }
         
         try {
             const transactions = await DataManager.getTransactions();
@@ -836,26 +1293,40 @@ const UIManager = {
         const netElem = document.getElementById('reportNetBalance');
 
         if (incomeElem) {
-            incomeElem.textContent = `${symbol}${income.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            })}`;
+            incomeElem.textContent = this.formatCurrencyForDisplay(income, symbol);
         }
         if (expensesElem) {
-            expensesElem.textContent = `${symbol}${expenses.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            })}`;
+            expensesElem.textContent = this.formatCurrencyForDisplay(expenses, symbol);
         }
         if (netElem) {
-            netElem.textContent = `${symbol}${netBalance.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            })}`;
+            netElem.textContent = this.formatCurrencyForDisplay(netBalance, symbol);
         }
     },
 
+    formatDataForCharts(data) {
+        const isPrivacyMode = localStorage.getItem('privacyMode') === 'true';
+        
+        if (isPrivacyMode) {
+            // Return zeros for privacy mode to hide actual data
+            return data.map(() => 0);
+        }
+        
+        return data;
+    },
+
     updateReportCharts(transactions) {
+        const isPrivacyMode = localStorage.getItem('privacyMode') === 'true';
+        
+        // Get currency settings
+        const currency = localStorage.getItem('currency') || 'USD';
+        const currencySymbols = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'INR': '₹'
+        };
+        const symbol = currencySymbols[currency];
+        
         // Income vs Expenses Chart
         const incomeExpensesCtx = document.getElementById('incomeExpensesChart').getContext('2d');
         const dates = [...new Set(transactions.map(t => new Date(t.date).toLocaleDateString()))].sort();
@@ -904,11 +1375,35 @@ const UIManager = {
                 plugins: {
                     legend: {
                         position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                if (isPrivacyMode) {
+                                    return context.dataset.label + ': ------';
+                                }
+                                return context.dataset.label + ': ' + symbol + context.raw.toLocaleString('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                });
+                            }
+                        }
                     }
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                if (isPrivacyMode) {
+                                    return '------';
+                                }
+                                return symbol + value.toLocaleString('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                });
+                            }
+                        }
                     }
                 }
             }
@@ -953,6 +1448,19 @@ const UIManager = {
                 plugins: {
                     legend: {
                         position: 'right'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                if (isPrivacyMode) {
+                                    return context.label + ': ------';
+                                }
+                                return context.label + ': ' + symbol + context.raw.toLocaleString('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                });
+                            }
+                        }
                     }
                 }
             }
@@ -962,6 +1470,20 @@ const UIManager = {
     updateReportTransactions(transactions) {
         const tbody = document.getElementById('reportTransactions');
         tbody.innerHTML = '';
+
+        // Update pagination state
+        this.reportsPagination.totalItems = transactions.length;
+        this.reportsPagination.totalPages = Math.ceil(transactions.length / this.reportsPagination.perPage);
+
+        // Reset to first page if current page is beyond total pages
+        if (this.reportsPagination.currentPage > this.reportsPagination.totalPages) {
+            this.reportsPagination.currentPage = 1;
+        }
+
+        // Apply pagination
+        const startIndex = (this.reportsPagination.currentPage - 1) * this.reportsPagination.perPage;
+        const endIndex = startIndex + this.reportsPagination.perPage;
+        const paginatedTransactions = transactions.slice(startIndex, endIndex);
 
         // Get currency settings
         const currency = localStorage.getItem('currency') || 'USD';
@@ -973,21 +1495,124 @@ const UIManager = {
         };
         const symbol = currencySymbols[currency];
 
-        transactions.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(transaction => {
+        // Sort transactions by date (newest first) and display paginated results
+        paginatedTransactions.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(transaction => {
             const row = document.createElement('tr');
+            const amountDisplay = this.formatCurrencyForDisplay(Math.abs(transaction.amount), symbol);
             row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap">${new Date(transaction.date).toLocaleDateString()}</td>
                 <td class="px-6 py-4">${transaction.description}</td>
                 <td class="px-6 py-4">${transaction.category}</td>
                 <td class="px-6 py-4">${transaction.type}</td>
                 <td class="px-6 py-4 ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}">
-                    ${transaction.type === 'income' ? '+' : '-'}${symbol}${Math.abs(transaction.amount).toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    })}
+                    ${transaction.type === 'income' ? '+' : '-'}${amountDisplay}
                 </td>
             `;
             tbody.appendChild(row);
+        });
+
+        // Update pagination info and controls
+        this.updateReportPaginationInfo();
+        this.updateReportPaginationControls();
+    },
+
+    updateReportPaginationInfo() {
+        const infoElement = document.getElementById('reportPaginationInfo');
+        if (!infoElement) return;
+
+        const { currentPage, perPage, totalItems, totalPages } = this.reportsPagination;
+        const startItem = totalItems === 0 ? 0 : (currentPage - 1) * perPage + 1;
+        const endItem = Math.min(currentPage * perPage, totalItems);
+
+        infoElement.textContent = `Showing ${startItem}-${endItem} of ${totalItems} transactions`;
+    },
+
+    updateReportPaginationControls() {
+        const controlsElement = document.getElementById('reportPaginationControls');
+        if (!controlsElement) return;
+
+        const { currentPage, totalPages } = this.reportsPagination;
+        
+        let controlsHTML = '';
+
+        // Previous button
+        controlsHTML += `
+            <button id="prevReportPage" 
+                    class="px-3 py-1 rounded border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500' : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500'}" 
+                    ${currentPage === 1 ? 'disabled' : ''}>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        `;
+
+        // Page numbers
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        // First page and ellipsis
+        if (startPage > 1) {
+            controlsHTML += `
+                <button class="report-pagination-page px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500" data-page="1">1</button>
+            `;
+            if (startPage > 2) {
+                controlsHTML += `<span class="px-2 text-gray-500 dark:text-gray-400">...</span>`;
+            }
+        }
+
+        // Page numbers
+        for (let i = startPage; i <= endPage; i++) {
+            controlsHTML += `
+                <button class="report-pagination-page px-3 py-1 rounded border ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500'}" 
+                        data-page="${i}">${i}</button>
+            `;
+        }
+
+        // Last page and ellipsis
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                controlsHTML += `<span class="px-2 text-gray-500 dark:text-gray-400">...</span>`;
+            }
+            controlsHTML += `
+                <button class="report-pagination-page px-3 py-1 rounded border bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500" data-page="${totalPages}">${totalPages}</button>
+            `;
+        }
+
+        // Next button
+        controlsHTML += `
+            <button id="nextReportPage" 
+                    class="px-3 py-1 rounded border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500' : 'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500'}" 
+                    ${currentPage === totalPages ? 'disabled' : ''}>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        `;
+
+        controlsElement.innerHTML = controlsHTML;
+
+        // Add event listeners
+        document.getElementById('prevReportPage')?.addEventListener('click', () => {
+            if (this.reportsPagination.currentPage > 1) {
+                this.reportsPagination.currentPage--;
+                this.generateReport();
+            }
+        });
+
+        document.getElementById('nextReportPage')?.addEventListener('click', () => {
+            if (this.reportsPagination.currentPage < this.reportsPagination.totalPages) {
+                this.reportsPagination.currentPage++;
+                this.generateReport();
+            }
+        });
+
+        document.querySelectorAll('.report-pagination-page').forEach(button => {
+            button.addEventListener('click', () => {
+                const page = parseInt(button.dataset.page);
+                this.reportsPagination.currentPage = page;
+                this.generateReport();
+            });
         });
     },
 
@@ -1024,6 +1649,7 @@ const UIManager = {
     initSettings() {
         this.initCurrencySettings();
         this.initThemeSettings();
+        this.initPrivacyModeSettings();
         this.initCategoryManagement();
         this.initDataManagement();
     },
@@ -1033,10 +1659,38 @@ const UIManager = {
         const savedCurrency = localStorage.getItem('currency') || 'USD';
         currencySelect.value = savedCurrency;
 
-        currencySelect.addEventListener('change', (e) => {
+        currencySelect.addEventListener('change', async (e) => {
             const newCurrency = e.target.value;
             localStorage.setItem('currency', newCurrency);
-            this.updateCurrencyDisplay(newCurrency);
+            
+            // Update all components that display currency
+            await this.updateDashboard();
+            await this.updateTransactionsList();
+            
+            // If we're on the reports page, refresh the reports
+            const reportsPage = document.getElementById('reports');
+            if (reportsPage && reportsPage.classList.contains('active')) {
+                await this.generateReport();
+            }
+            
+            // If we're on the goals page, refresh the charts
+            const goalsPage = document.getElementById('goals');
+            if (goalsPage && goalsPage.classList.contains('active')) {
+                await this.updateExpenseLimitsCharts();
+            }
+            
+            // Update subscription and debt summaries if on those pages
+            const subscriptionsPage = document.getElementById('subscriptions');
+            if (subscriptionsPage && subscriptionsPage.classList.contains('active')) {
+                await this.loadSubscriptionData();
+            }
+            
+            const debtsPage = document.getElementById('debts');
+            if (debtsPage && debtsPage.classList.contains('active')) {
+                await this.updateDebtsSummary();
+                await this.updateDebtsLists();
+                await this.updateAllDebtsTable();
+            }
         });
 
         this.updateCurrencyDisplay(savedCurrency);
@@ -1053,6 +1707,56 @@ const UIManager = {
             localStorage.setItem('theme', newTheme);
             this.updateThemeIcon(document.querySelector('#themeToggle i'), newTheme);
         });
+    },
+
+    initPrivacyModeSettings() {
+        const privacyModeToggle = document.getElementById('privacyMode');
+        const savedPrivacyMode = localStorage.getItem('privacyMode') === 'true';
+        
+        if (privacyModeToggle) {
+            privacyModeToggle.checked = savedPrivacyMode;
+            
+            privacyModeToggle.addEventListener('change', async (e) => {
+                const isPrivacyMode = e.target.checked;
+                localStorage.setItem('privacyMode', isPrivacyMode.toString());
+                
+                // Refresh dashboard and reports to apply privacy mode
+                await this.updateDashboard();
+                
+                // If we're on the reports page, refresh it too
+                const reportsPage = document.getElementById('reports');
+                if (reportsPage && reportsPage.classList.contains('active')) {
+                    this.generateReport();
+                }
+            });
+        }
+    },
+
+    formatCurrencyForDisplay(amount, symbol, options = {}) {
+        const isPrivacyMode = localStorage.getItem('privacyMode') === 'true';
+        
+        if (isPrivacyMode) {
+            return `${symbol}------`;
+        }
+        
+        const defaultOptions = {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        };
+        
+        const formatOptions = { ...defaultOptions, ...options };
+        
+        return `${symbol}${Number(amount).toLocaleString('en-US', formatOptions)}`;
+    },
+
+    formatNumberForDisplay(value, suffix = '') {
+        const isPrivacyMode = localStorage.getItem('privacyMode') === 'true';
+        
+        if (isPrivacyMode) {
+            return `------${suffix}`;
+        }
+        
+        return `${value}${suffix}`;
     },
 
     initCategoryManagement() {
@@ -1596,6 +2300,7 @@ const UIManager = {
 
     async updateExpenseLimitsCharts() {
         try {
+            const isPrivacyMode = localStorage.getItem('privacyMode') === 'true';
             const status = await ExpenseLimitsManager.fetchExpenseLimitsStatus();
             console.log('Fetched expense limits status for charts:', status);
             
@@ -1660,6 +2365,9 @@ const UIManager = {
                                 beginAtZero: true,
                                 ticks: {
                                     callback: function(value) {
+                                        if (isPrivacyMode) {
+                                            return '------';
+                                        }
                                         return symbol + value.toLocaleString('en-US', {
                                             minimumFractionDigits: 2,
                                             maximumFractionDigits: 2
@@ -1672,6 +2380,9 @@ const UIManager = {
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
+                                        if (isPrivacyMode) {
+                                            return context.dataset.label + ': ------';
+                                        }
                                         return context.dataset.label + ': ' + symbol + context.raw.toLocaleString('en-US', {
                                             minimumFractionDigits: 2,
                                             maximumFractionDigits: 2
@@ -1732,6 +2443,9 @@ const UIManager = {
                                 beginAtZero: true,
                                 ticks: {
                                     callback: function(value) {
+                                        if (isPrivacyMode) {
+                                            return '------';
+                                        }
                                         return symbol + value.toLocaleString('en-US', {
                                             minimumFractionDigits: 2,
                                             maximumFractionDigits: 2
@@ -1744,6 +2458,9 @@ const UIManager = {
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
+                                        if (isPrivacyMode) {
+                                            return context.dataset.label + ': ------';
+                                        }
                                         return context.dataset.label + ': ' + symbol + context.raw.toLocaleString('en-US', {
                                             minimumFractionDigits: 2,
                                             maximumFractionDigits: 2

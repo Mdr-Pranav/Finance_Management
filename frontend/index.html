@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Finance Manager</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABCtJREFUWEfNl2uIVVUUx39rn3Pv3Jl7x5nRGSeVwqhIeyKVWQkVfbAXVERQH6LyQQRBHz5EEH0IIuhDH4qgLxEUFb2gILLsQdGjMktLK7W0knRmnLl3Xu/Ze619xr33zp07Y0/wXW7ee+21/nut9d9rHcH/fEQE/k8BZgI7gA1AJbQeBweBH4F3gR3AQVVNjKfAROAJ4GlgNjABsEAf0A98BnwCvAu8r6p9YxFRYwFmAS8ALwKzSgHcBDqBz4E3gVdVtfO/AkwFXgJeB6aVAGgBGoEE8CU/P0ckGhWgF3gMuE9Vdw0nwgC2AW+F9B9QVQOEAzQoQBewBFhjjPlBVU+LyFygwRjzlojcVrLhOECHiDyoqidD+v3ATRU5Xw28BCwBaoE4UKOqnSJyBvgZWFQRwCPAa8DkMhLvAhYCLwMzRKQuXKeISL2I1AH1wESg3lr7qap+EwCag4aXTVmAOWElNgQ+EJH5qrpXRM4BCSBWAmAQ6AYOiMh1VX1LRDYAI1mghCAEYR4AaK21G0Vkp7X2poh0AH3ACRGZATyiqvaKJAX1BmCdtfZDEXkWmBdU4JoSW3Vaa9eJyCGgrbXVPvDAA4kmk80KZGKjbj5MeH59fd1yzxubgBqgxlq7XkQ+stbuF5GVwXV9NuqgfKqqV4wh1jJXAysqsv8X8JW19n0R2dXaev78rbfeeo1R5mhAwlWU8FZd1d/KjGHGzDa90FjXXF9f30wMr1rrLyR8+OlEZBwOx/yY5x0FDqvqWeBsWLkngPXAXJONW9YUyOdN+qNjDbkP/+t+M/T3nDIWEZJNQAcwOagGgLgSzgHeBD5T1c4y7ZhGKYg5YXJejOTgOJ0xZZSAlAAKC1RVRMQAJvydJNrb25v3799/HLhLVX8bi/c/aYK19jZr7VvBTWk4gCLdKWUOqmqP6/oLXddlWK6kKdZaY4wpvUqZOZJEpKCciJTcgUpzjVNaAFiQROwBhN+ATGAJJFlQ++0H+9L7/vxRnVyeRM7k0J54Asgm7rVV+/6fAKCT8Q5iE6DZiQ8//PCJzs7OH+LxeIcxJi4iVkSsqoox5pSqPqeqA8Pa8HN4/p8O0UdKV1G7q6/87Y/Pf/3t1xvJt/4mJoliI1OJX3tN3CYzx2bRgv72rdv39fX1nQ7OuhgOXJwxZpq1tklVZw6LQFGNiiJpSXVJA/rOcnbT+VgsZvP5fFRVoyISCdpfb4xJiUhcVfOBi1PASU3Vm3u3fhZ6Yb4xZqqqzlTVGaoKgIj0qOpVVT0VCGKoqsNiUl6By9f6/vXnb2drYkTj6VSuJxqLRnrOdB/Pn/iFjk8vfZJr8fy4F4tJYzabM8b46zq7O5t6e3quzJ0798jw9qSSKMsKcKvfVJQrn8vPrTd/uY3u7m5fe3u7vx4bOw7//R+DlKJJ8ZTR8QAAAABJRU5ErkJggg==">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAABCtJREFUWEfNl2uIVVUUx39rn3Pv3Jl7x5nRGSeVwqhIeyKVWQkVfbAXVERQH6LyQQRBHz5EEH0IIuhDH4qgLxEUFb2gILLsQdGjMktLK7W0knRmnLl3Xu/Ze619xr33zp07Y0/wXW7ee+21/nut9d9rHcH/fEQE/k8BZgI7gA1AJbQeBweBH4F3gR3AQVVNjKfAROAJ4GlgNjABsEAf0A98BnwCvAu8r6p9YxFRYwFmAS8ALwKzSgHcBDqBz4E3gVdVtfO/AkwFXgJeB6aVAGgBGoEE8CU/P0ckGhWgF3gMuE9Vdw0nwgC2AW+F9B9QVQOEAzQoQBewBFhjjPlBVU+LyFygwRjzlojcVrLhOECHiDyoqidD+v3ATRU5Xw28BCwBaoE4UKOqnSJyBvgZWFQRwCPAa8DkMhLvAhYCLwMzRKQuXKeISL2I1AH1wESg3lr7qap+EwCag4aXTVmAOWElNgQ+EJH5qrpXRM4BCSBWAmAQ6AYOiMh1VX1LRDYAI1mghCAEYR4AaK21G0Vkp7X2poh0AH3ACRGZATyiqvaKJAX1BmCdtfZDEXkWmBdU4JoSW3Vaa9eJyCGgrbXVPvDAA4kmk80KZGKjbj5MeH59fd1yzxubgBqgxlq7XkQ+stbuF5GVwXV9NuqgfKqqV4wh1jJXAysqsv8X8JW19n0R2dXaev78rbfeeo1R5mhAwlWU8FZd1d/KjGHGzDa90FjXXF9f30wMr1rrLyR8+OlEZBwOx/yY5x0FDqvqWeBsWLkngPXAXJONW9YUyOdN+qNjDbkP/+t+M/T3nDIWEZJNQAcwOagGgLgSzgHeBD5T1c4y7ZhGKYg5YXJejOTgOJ0xZZSAlAAKC1RVRMQAJvydJNrb25v3799/HLhLVX8bi/c/aYK19jZr7VvBTWk4gCLdKWUOqmqP6/oLXddlWK6kKdZaY4wpvUqZOZJEpKCciJTcgUpzjVNaAFiQROwBhN+ATGAJJFlQ++0H+9L7/vxRnVyeRM7k0J54Asgm7rVV+/6fAKCT8Q5iE6DZiQ8//PCJzs7OH+LxeIcxJi4iVkSsqoox5pSqPqeqA8Pa8HN4/p8O0UdKV1G7q6/87Y/Pf/3t1xvJt/4mJoliI1OJX3tN3CYzx2bRgv72rdv39fX1nQ7OuhgOXJwxZpq1tklVZw6LQFGNiiJpSXVJA/rOcnbT+VgsZvP5fFRVoyISCdpfb4xJiUhcVfOBi1PASU3Vm3u3fhZ6Yb4xZqqqzlTVGaoKgIj0qOpVVT0VCGKoqsNiUl6By9f6/vXnb2drYkTj6VSuJxqLRnrOdB/Pn/iFjk8vfZJr8fy4F4tJYzabM8b46zq7O5t6e3quzJ0798jw9qSSKMsKcKvfVJQrn8vPrTd/uY3u7m5fe3u7vx4bOw7//R+DlKJJ8ZTR8QAAAABJRU5ErkJggg==">
+    
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
@@ -148,18 +154,211 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Balance Card -->
                     <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-gray-500 text-sm">Total Balance</h3>
+                        <h3 class="text-gray-500 text-sm">Total Balance (All Time)</h3>
                         <p class="text-3xl font-bold text-gray-800" id="totalBalance">0.00</p>
                     </div>
                     <!-- Income Card -->
                     <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-gray-500 text-sm">Total Income</h3>
+                        <h3 class="text-gray-500 text-sm">Monthly Income</h3>
                         <p class="text-3xl font-bold text-green-600" id="monthlyIncome">0.00</p>
                     </div>
                     <!-- Expenses Card -->
                     <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-gray-500 text-sm">Total Expenses</h3>
+                        <h3 class="text-gray-500 text-sm">Monthly Expenses</h3>
                         <p class="text-3xl font-bold text-red-600" id="monthlyExpenses">0.00</p>
+                    </div>
+                </div>
+
+                <!-- Additional Summary Stats -->
+                <div class="mt-8">
+                    <h2 class="text-xl font-bold mb-4">Monthly Overview</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Savings Rate -->
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-piggy-bank text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 text-sm font-medium">Savings Rate</h3>
+                                    <p class="text-2xl font-bold text-blue-600" id="savingsRate">0%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Average Daily Spending -->
+                        <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-calendar-day text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 text-sm font-medium">Daily Average</h3>
+                                    <p class="text-2xl font-bold text-purple-600" id="dailyAverage">$0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transaction Count -->
+                        <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-exchange-alt text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 text-sm font-medium">Transactions</h3>
+                                    <p class="text-2xl font-bold text-orange-600" id="transactionCount">0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Category -->
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-chart-pie text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 text-sm font-medium">Top Category</h3>
+                                    <p class="text-lg font-bold text-green-600" id="topCategory">None</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Insights -->
+                <div class="mt-8">
+                    <h2 class="text-xl font-bold mb-4">Quick Insights</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Largest Expense -->
+                        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-gray-600 text-sm font-medium">Largest Expense</h3>
+                                    <p class="text-xl font-bold text-red-600" id="largestExpense">$0</p>
+                                    <p class="text-sm text-gray-500" id="largestExpenseCategory">No expenses</p>
+                                </div>
+                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-arrow-down text-red-500"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Largest Income -->
+                        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-gray-600 text-sm font-medium">Largest Income</h3>
+                                    <p class="text-xl font-bold text-green-600" id="largestIncome">$0</p>
+                                    <p class="text-sm text-gray-500" id="largestIncomeDescription">No income</p>
+                                </div>
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-arrow-up text-green-500"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Trend -->
+                        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-gray-600 text-sm font-medium">vs Last Month</h3>
+                                    <p class="text-xl font-bold" id="monthlyTrend">--</p>
+                                    <p class="text-sm text-gray-500" id="monthlyTrendDescription">No comparison</p>
+                                </div>
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-blue-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Health Summary -->
+                <div class="mt-8">
+                    <h2 class="text-xl font-bold mb-4">Financial Health</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Debt Summary -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Total Debts</h3>
+                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-handshake text-red-500"></i>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">I Owe:</span>
+                                    <span class="text-sm font-medium text-red-600" id="dashboardIOwe">$0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Owed to Me:</span>
+                                    <span class="text-sm font-medium text-green-600" id="dashboardOwedToMe">$0</span>
+                                </div>
+                                <hr class="my-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-800">Net:</span>
+                                    <span class="text-sm font-bold" id="dashboardNetDebt">$0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subscription Summary -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Subscriptions</h3>
+                                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-sync-alt text-purple-500"></i>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Active:</span>
+                                    <span class="text-sm font-medium" id="dashboardActiveSubscriptions">0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Monthly Cost:</span>
+                                    <span class="text-sm font-medium text-purple-600" id="dashboardMonthlyCost">$0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Due This Week:</span>
+                                    <span class="text-sm font-medium text-orange-600" id="dashboardDueThisWeek">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Budget Status -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Budget Goals</h3>
+                                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-bullseye text-yellow-500"></i>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Active Limits:</span>
+                                    <span class="text-sm font-medium" id="dashboardActiveLimits">0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Exceeded:</span>
+                                    <span class="text-sm font-medium text-red-600" id="dashboardExceededLimits">0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">On Track:</span>
+                                    <span class="text-sm font-medium text-green-600" id="dashboardOnTrackLimits">0</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -628,22 +827,22 @@
             <!-- Reports Page -->
             <div id="reports" class="page">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">Financial Reports</h2>
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Financial Reports</h2>
                     
                     <!-- Date Range Selector -->
-                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
                         <div class="flex items-center space-x-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Start Date</label>
-                                <input type="date" id="reportStartDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Date</label>
+                                <input type="date" id="reportStartDate" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">End Date</label>
-                                <input type="date" id="reportEndDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">End Date</label>
+                                <input type="date" id="reportEndDate" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Category</label>
-                                <select id="reportCategory" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
+                                <select id="reportCategory" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                     <option value="">All Categories</option>
                                 </select>
                             </div>
@@ -657,54 +856,155 @@
 
                     <!-- Summary Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Total Income</h3>
-                            <p class="text-3xl font-bold text-green-600" id="reportTotalIncome">0.00</p>
+                        <!-- Total Income Card -->
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-arrow-up text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 dark:text-green-200 text-sm font-medium">Total Income</h3>
+                                    <p class="text-2xl font-bold text-green-600 dark:text-green-300" id="reportTotalIncome">0.00</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Total Expenses</h3>
-                            <p class="text-3xl font-bold text-red-600" id="reportTotalExpenses">0.00</p>
+
+                        <!-- Total Expenses Card -->
+                        <div class="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-arrow-down text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 dark:text-red-200 text-sm font-medium">Total Expenses</h3>
+                                    <p class="text-2xl font-bold text-red-600 dark:text-red-300" id="reportTotalExpenses">0.00</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Net Balance</h3>
-                            <p class="text-3xl font-bold text-gray-800" id="reportNetBalance">0.00</p>
+
+                        <!-- Net Balance Card -->
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-balance-scale text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 dark:text-blue-200 text-sm font-medium">Net Balance</h3>
+                                    <p class="text-2xl font-bold text-blue-600 dark:text-blue-300" id="reportNetBalance">0.00</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Charts Section -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        <!-- Income vs Expenses Chart -->
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-lg font-semibold mb-4">Income vs Expenses</h3>
-                            <canvas id="incomeExpensesChart"></canvas>
-                        </div>
-                        <!-- Category Distribution Chart -->
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-lg font-semibold mb-4">Expense Categories</h3>
-                            <canvas id="categoryDistributionChart"></canvas>
+                    <div class="mt-8">
+                        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">Analytics</h2>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                            <!-- Income vs Expenses Chart -->
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                                <div class="p-4 border-b bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 border-indigo-200 dark:border-indigo-700">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-chart-line text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-200">Income vs Expenses</h3>
+                                            <p class="text-sm text-indigo-600 dark:text-indigo-300">Track your financial flow over time</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <canvas id="incomeExpensesChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Category Distribution Chart -->
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                                <div class="p-4 border-b bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border-purple-200 dark:border-purple-700">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-chart-pie text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-purple-800 dark:text-purple-200">Expense Categories</h3>
+                                            <p class="text-sm text-purple-600 dark:text-purple-300">Breakdown of spending by category</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <canvas id="categoryDistributionChart"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Detailed Transactions Table -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="p-4 border-b">
-                            <h3 class="text-lg font-semibold">Detailed Transactions</h3>
+                    <div class="mt-8">
+                        <!-- Pagination Controls -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center space-x-2">
+                                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Show:</label>
+                                        <select id="reportTransactionsPerPage" class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50" selected>50</option>
+                                            <option value="100">100</option>
+                                            <option value="150">150</option>
+                                        </select>
+                                        <span class="text-sm text-gray-700 dark:text-gray-300">per page</span>
+                                    </div>
+                                    <div id="reportPaginationInfo" class="text-sm text-gray-600 dark:text-gray-400">
+                                        <!-- Pagination info will be inserted here -->
+                                    </div>
+                                </div>
+                                <div id="reportPaginationControls" class="flex items-center space-x-2">
+                                    <!-- Pagination controls will be inserted here -->
+                                </div>
+                            </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="reportTransactions" class="divide-y divide-gray-200">
-                                    <!-- Transactions will be inserted here -->
-                                </tbody>
-                            </table>
+
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                            <div class="p-4 border-b bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 border-gray-200 dark:border-gray-600">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-table text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Detailed Transactions</h3>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">Complete transaction history for the selected period</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Description</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Category</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Type</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportTransactions" class="divide-y divide-gray-200 dark:divide-gray-600">
+                                        <!-- Transactions will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -753,6 +1053,31 @@
                         </div>
                     </div>
 
+                    <!-- Pagination Controls -->
+                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <label class="text-sm font-medium text-gray-700">Show:</label>
+                                    <select id="transactionsPerPage" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100" selected>100</option>
+                                        <option value="150">150</option>
+                                    </select>
+                                    <span class="text-sm text-gray-700">per page</span>
+                                </div>
+                                <div id="transactionsPaginationInfo" class="text-sm text-gray-600">
+                                    <!-- Pagination info will be inserted here -->
+                                </div>
+                            </div>
+                            <div id="transactionsPaginationControls" class="flex items-center space-x-2">
+                                <!-- Pagination controls will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Transactions Table -->
                     <div class="bg-white rounded-lg shadow overflow-hidden">
                         <table class="min-w-full">
@@ -786,40 +1111,72 @@
 
                     <!-- Goals Overview -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Active Limits</h3>
-                            <p class="text-3xl font-bold text-gray-800"><span id="activeGoals">0</span></p>
+                        <!-- Active Limits -->
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-bullseye text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 dark:text-blue-200 text-sm font-medium">Active Limits</h3>
+                                    <p class="text-2xl font-bold text-blue-600 dark:text-blue-300"><span id="activeGoals">0</span></p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Exceeded Limits</h3>
-                            <p class="text-3xl font-bold text-red-600"><span id="exceededLimits">0</span></p>
+
+                        <!-- Exceeded Limits -->
+                        <div class="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-exclamation-triangle text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 dark:text-red-200 text-sm font-medium">Exceeded Limits</h3>
+                                    <p class="text-2xl font-bold text-red-600 dark:text-red-300"><span id="exceededLimits">0</span></p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Total Spent</h3>
-                            <p class="text-3xl font-bold text-blue-600"><span id="totalSpent">0.00</span></p>
+
+                        <!-- Total Spent -->
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-dollar-sign text-white text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-600 dark:text-green-200 text-sm font-medium">Total Spent</h3>
+                                    <p class="text-2xl font-bold text-green-600 dark:text-green-300"><span id="totalSpent">0.00</span></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Filters -->
-                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Start Date</label>
-                                <input type="date" id="goalsStartDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Date</label>
+                                <input type="date" id="goalsStartDate" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">End Date</label>
-                                <input type="date" id="goalsEndDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">End Date</label>
+                                <input type="date" id="goalsEndDate" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Category</label>
-                                <select id="goalsCategory" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
+                                <select id="goalsCategory" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                     <option value="">All Categories</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Show</label>
-                                <select id="goalsFilterType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Show</label>
+                                <select id="goalsFilterType" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                     <option value="all">All</option>
                                     <option value="exceeded">Exceeded Only</option>
                                     <option value="within">Within Limits</option>
@@ -829,49 +1186,105 @@
                     </div>
 
                     <!-- Charts Section -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        <!-- Category Spending vs Limit Chart -->
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-lg font-semibold mb-4">Category Spending vs Limits</h3>
-                            <canvas id="category-spending-chart"></canvas>
-                        </div>
-                        <!-- Monthly Trend Chart -->
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-lg font-semibold mb-4">Monthly Spending Trend</h3>
-                            <canvas id="monthly-trend-chart"></canvas>
+                    <div class="mt-8">
+                        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">Analytics</h2>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                            <!-- Category Spending vs Limit Chart -->
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                                <div class="p-4 border-b bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 border-blue-200 dark:border-blue-700">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-chart-bar text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200">Category Spending vs Limits</h3>
+                                            <p class="text-sm text-blue-600 dark:text-blue-300">Compare spending against your limits</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <canvas id="category-spending-chart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Monthly Trend Chart -->
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                                <div class="p-4 border-b bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border-purple-200 dark:border-purple-700">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-chart-line text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-purple-800 dark:text-purple-200">Monthly Spending Trend</h3>
+                                            <p class="text-sm text-purple-600 dark:text-purple-300">Track your spending over time</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <canvas id="monthly-trend-chart"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Expense Limits List -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="p-4 border-b">
-                            <h3 class="text-lg font-semibold">Your Expense Limits</h3>
-                        </div>
-                        <div id="expense-limits-list" class="divide-y divide-gray-200 p-4">
-                            <!-- Expense limits will be inserted here -->
+                    <div class="mt-8">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                            <div class="p-4 border-b bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 border-green-200 dark:border-green-700">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-list-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-green-800 dark:text-green-200">Your Expense Limits</h3>
+                                        <p class="text-sm text-green-600 dark:text-green-300">Manage your spending goals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="expense-limits-list" class="divide-y divide-gray-200 dark:divide-gray-600 p-4 min-h-[200px]">
+                                <!-- Expense limits will be inserted here -->
+                            </div>
                         </div>
                     </div>
 
                     <!-- Exceeded Transactions -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden mt-6">
-                        <div class="p-4 border-b">
-                            <h3 class="text-lg font-semibold">Transactions Exceeding Limits</h3>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Limit</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Exceeded By</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="exceededTransactions" class="divide-y divide-gray-200">
-                                    <!-- Exceeded transactions will be inserted here -->
-                                </tbody>
-                            </table>
+                    <div class="mt-8">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                            <div class="p-4 border-b bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 border-orange-200 dark:border-orange-700">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-exclamation-circle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-orange-800 dark:text-orange-200">Transactions Exceeding Limits</h3>
+                                        <p class="text-sm text-orange-600 dark:text-orange-300">Review transactions that went over budget</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Category</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Amount</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Limit</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Exceeded By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="exceededTransactions" class="divide-y divide-gray-200 dark:divide-gray-600">
+                                        <!-- Exceeded transactions will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -965,75 +1378,160 @@
             <!-- Settings Page -->
             <div id="settings" class="page">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold mb-6">Settings</h2>
+                    <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Settings</h2>
 
                     <!-- General Settings -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
-                        <div class="p-4 border-b">
-                            <h3 class="text-lg font-semibold">General Settings</h3>
-                        </div>
-                        <div class="p-4">
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Currency</label>
-                                    <select id="currency" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                        <option value="USD">USD ($)</option>
-                                        <option value="EUR">EUR (€)</option>
-                                        <option value="GBP">GBP (£)</option>
-                                        <option value="INR">INR (₹)</option>
-                                    </select>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-6">
+                        <div class="p-4 border-b bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 border-blue-200 dark:border-blue-700">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-cogs text-white"></i>
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Theme</label>
-                                    <select id="theme" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                        <option value="light">Light</option>
-                                        <option value="dark">Dark</option>
-                                    </select>
+                                    <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200">General Settings</h3>
+                                    <p class="text-sm text-blue-600 dark:text-blue-300">Configure your application preferences</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Currency</label>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <i class="fas fa-dollar-sign text-gray-400"></i>
+                                            </div>
+                                            <select id="currency" class="pl-10 mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                <option value="USD">USD ($)</option>
+                                                <option value="EUR">EUR (€)</option>
+                                                <option value="GBP">GBP (£)</option>
+                                                <option value="INR">INR (₹)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Theme</label>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <i class="fas fa-palette text-gray-400"></i>
+                                            </div>
+                                            <select id="theme" class="pl-10 mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                <option value="light">Light</option>
+                                                <option value="dark">Dark</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-700 rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-eye-slash text-white text-sm"></i>
+                                            </div>
+                                            <div>
+                                                <label class="text-sm font-medium text-gray-700 dark:text-purple-200">Privacy Mode</label>
+                                                <p class="text-xs text-gray-500 dark:text-purple-300 mt-1">Hide financial amounts in dashboard and reports</p>
+                                            </div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="privacyMode" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Categories Management -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
-                        <div class="p-4 border-b">
-                            <h3 class="text-lg font-semibold">Categories Management</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-6">
+                        <div class="p-4 border-b bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 border-green-200 dark:border-green-700">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-tags text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-green-800 dark:text-green-200">Categories Management</h3>
+                                    <p class="text-sm text-green-600 dark:text-green-300">Organize your transactions with custom categories</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-4">
+                        <div class="p-6">
                             <div class="space-y-4">
-                                <div class="flex items-center space-x-4">
-                                    <input type="text" id="newCategory" placeholder="New category name" class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    <button id="addCategoryBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                                        Add Category
+                                <div class="flex items-stretch space-x-4">
+                                    <div class="flex-1 relative">
+                                        <input type="text" id="newCategory" placeholder="New category name" class="w-full h-12 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 shadow-sm focus:border-green-500 focus:ring-green-500 focus:ring-1 px-3">
+                                    </div>
+                                    <button id="addCategoryBtn" class="bg-green-600 text-white px-6 h-12 rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-300 flex items-center space-x-2 transition-all duration-200 flex-shrink-0">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Add Category</span>
                                     </button>
                                 </div>
-                                <div id="categoriesList" class="space-y-2">
+                                <div id="categoriesList" class="space-y-2 max-h-60 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-700/50">
                                     <!-- Categories will be inserted here -->
+                                    <div class="text-center text-gray-500 dark:text-gray-400 text-sm py-4">
+                                        <i class="fas fa-folder-open text-2xl mb-2 block"></i>
+                                        No custom categories added yet
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Data Management -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="p-4 border-b">
-                            <h3 class="text-lg font-semibold">Data Management</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                        <div class="p-4 border-b bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 border-orange-200 dark:border-orange-700">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-database text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-orange-800 dark:text-orange-200">Data Management</h3>
+                                    <p class="text-sm text-orange-600 dark:text-orange-300">Backup, restore, and manage your financial data</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-4">
+                        <div class="p-6">
                             <div class="space-y-4">
-                                <div class="flex flex-wrap gap-4">
-                                    <button id="exportDataBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                                        Export Data
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <button id="exportDataBtn" class="bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 transition-colors">
+                                        <i class="fas fa-download"></i>
+                                        <span>Export Data</span>
                                     </button>
-                                    <button id="importDataBtn" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
-                                        Import Data
+                                    <button id="importDataBtn" class="bg-yellow-600 text-white px-4 py-3 rounded-lg hover:bg-yellow-700 flex items-center justify-center space-x-2 transition-colors">
+                                        <i class="fas fa-upload"></i>
+                                        <span>Import Data</span>
                                     </button>
-                                    <button id="clearDataBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
-                                        Clear All Data
+                                    <button id="clearCacheBtn" class="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-2 transition-colors">
+                                        <i class="fas fa-sync-alt"></i>
+                                        <span>Clear Cache & Reload</span>
                                     </button>
-                                    <button id="clearCacheBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                                        Clear Cache & Reload
+                                    <button id="clearDataBtn" class="bg-red-600 text-white px-4 py-3 rounded-lg hover:bg-red-700 flex items-center justify-center space-x-2 transition-colors">
+                                        <i class="fas fa-trash-alt"></i>
+                                        <span>Clear All Data</span>
                                     </button>
+                                </div>
+                                
+                                <div class="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200 dark:border-red-700 rounded-lg p-4 mt-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-exclamation-triangle text-white text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-medium text-red-800 dark:text-red-200">Warning</h4>
+                                            <p class="text-xs text-red-600 dark:text-red-300 mt-1">
+                                                Clearing all data will permanently delete all your transactions, categories, and settings. This action cannot be undone.
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1041,70 +1539,70 @@
                 </div>
             </div>
 
+            <!-- Add Transaction Modal -->
+            <div id="transactionModal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="text-xl font-bold">Add Transaction</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <form id="transactionForm" class="p-4">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
+                                Amount
+                            </label>
+                            <input type="number" id="amount" name="amount" step="0.01" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="date">
+                                Date
+                            </label>
+                            <input type="date" id="date" name="date" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                                Description
+                            </label>
+                            <input type="text" id="description" name="description" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="type">
+                                Type
+                            </label>
+                            <select id="type" name="type" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="income" selected>Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                        </div>
+                        <div id="categoryContainer" class="mb-4" style="display: none;">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="transactionCategorySelect">
+                                Category
+                            </label>
+                            <select id="transactionCategorySelect" name="category" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="Food">Food</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                Save Transaction
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Other pages will be added here -->
         </main>
-    </div>
-
-    <!-- Add Transaction Modal -->
-    <div id="transactionModal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="text-xl font-bold">Add Transaction</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form id="transactionForm" class="p-4">
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="amount">
-                        Amount
-                    </label>
-                    <input type="number" id="amount" name="amount" step="0.01" required
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="date">
-                        Date
-                    </label>
-                    <input type="date" id="date" name="date" required
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-                        Description
-                    </label>
-                    <input type="text" id="description" name="description" required
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="type">
-                        Type
-                    </label>
-                    <select id="type" name="type" required
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        <option value="income" selected>Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
-                </div>
-                <div id="categoryContainer" class="mb-4" style="display: none;">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="transactionCategorySelect">
-                        Category
-                    </label>
-                    <select id="transactionCategorySelect" name="category" required
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        <option value="Food">Food</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Bills">Bills</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="flex justify-end">
-                    <button type="submit"
-                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                        Save Transaction
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <script src="app.js"></script>
