@@ -76,6 +76,8 @@
 [data-theme="dark"] input[type="text"],
 [data-theme="dark"] input[type="number"],
 [data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="month"],
+[data-theme="dark"] textarea,
 [data-theme="dark"] select {
     background-color: var(--input-bg);
     border-color: var(--input-border);
@@ -85,6 +87,8 @@
 [data-theme="dark"] input[type="text"]:focus,
 [data-theme="dark"] input[type="number"]:focus,
 [data-theme="dark"] input[type="date"]:focus,
+[data-theme="dark"] input[type="month"]:focus,
+[data-theme="dark"] textarea:focus,
 [data-theme="dark"] select:focus {
     border-color: #60a5fa;
     box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
@@ -126,6 +130,8 @@ body {
 input[type="text"],
 input[type="number"],
 input[type="date"],
+input[type="month"],
+textarea,
 select,
 table,
 th,

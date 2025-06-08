@@ -10,49 +10,139 @@
     <link href="dark-mode.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Sidebar collapse styles */
+        .sidebar {
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 4rem !important;
+        }
+        .sidebar.collapsed .nav-text {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            visibility: hidden;
+            width: 0;
+            overflow: hidden;
+        }
+        .nav-text {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .logo-text {
+            transition: opacity 0.3s ease, visibility 0.3s ease, width 0.3s ease;
+        }
+        .main-content {
+            transition: margin-left 0.3s ease;
+        }
+        .sidebar.collapsed + .main-content {
+            margin-left: 0;
+        }
+        .sidebar.collapsed .header-container {
+            justify-content: center !important;
+            padding: 1rem 0.5rem !important;
+        }
+        .sidebar.collapsed .buttons-container {
+            flex-direction: column !important;
+            gap: 0.25rem !important;
+        }
+        .sidebar.collapsed .buttons-container button {
+            padding: 0.25rem !important;
+        }
+        /* Tooltip for collapsed nav items */
+        .nav-tooltip {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #374151;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 1000;
+            margin-left: 0.5rem;
+        }
+        .nav-tooltip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -4px;
+            transform: translateY(-50%);
+            border-right: 4px solid #374151;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        .sidebar.collapsed .nav-item:hover .nav-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-lg">
+        <aside class="sidebar w-64 bg-white shadow-lg">
             <div class="p-4">
-                <div class="flex items-center justify-between p-4 bg-white shadow">
-                    <h1 class="text-2xl font-bold text-gray-800">Personal Finance Manager</h1>
-                    <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-moon"></i>
-                    </button>
+                <div class="header-container flex items-center justify-between p-4 bg-white shadow">
+                    <h1 class="logo-text text-2xl font-bold text-gray-800">Personal Finance Manager</h1>
+                    <div class="buttons-container flex items-center space-x-2">
+                        <button id="sidebarToggle" class="p-2 rounded-lg hover:bg-gray-100" title="Toggle Sidebar">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <nav class="mt-4">
-                <a href="#" class="nav-item active" data-page="dashboard">
+                <a href="#" class="nav-item active relative" data-page="dashboard">
                     <i class="fas fa-chart-line"></i>
-                    <span>Dashboard</span>
+                    <span class="nav-text">Dashboard</span>
+                    <div class="nav-tooltip">Dashboard</div>
                 </a>
-                <a href="#" class="nav-item" data-page="transactions">
+                <a href="#" class="nav-item relative" data-page="transactions">
                     <i class="fas fa-exchange-alt"></i>
-                    <span>Transactions</span>
+                    <span class="nav-text">Transactions</span>
+                    <div class="nav-tooltip">Transactions</div>
                 </a>
-                <a href="#" class="nav-item" data-page="budget">
-                    <i class="fas fa-wallet"></i>
-                    <span>Budget</span>
-                </a>
-                <a href="#" class="nav-item" data-page="goals">
+                <a href="#" class="nav-item relative" data-page="goals">
                     <i class="fas fa-bullseye"></i>
-                    <span>Goals</span>
+                    <span class="nav-text">Goals</span>
+                    <div class="nav-tooltip">Goals</div>
                 </a>
-                <a href="#" class="nav-item" data-page="reports">
+                <a href="#" class="nav-item relative" data-page="debts">
+                    <i class="fas fa-handshake"></i>
+                    <span class="nav-text">Debts</span>
+                    <div class="nav-tooltip">Debts</div>
+                </a>
+                <a href="#" class="nav-item relative" data-page="subscriptions">
+                    <i class="fas fa-sync-alt"></i>
+                    <span class="nav-text">Subscriptions</span>
+                    <div class="nav-tooltip">Subscriptions</div>
+                </a>
+                <a href="#" class="nav-item relative" data-page="reports">
                     <i class="fas fa-chart-bar"></i>
-                    <span>Reports</span>
+                    <span class="nav-text">Reports</span>
+                    <div class="nav-tooltip">Reports</div>
                 </a>
-                <a href="#" class="nav-item" data-page="settings">
+                <a href="#" class="nav-item relative" data-page="settings">
                     <i class="fas fa-cog"></i>
-                    <span>Settings</span>
+                    <span class="nav-text">Settings</span>
+                    <div class="nav-tooltip">Settings</div>
                 </a>
             </nav>
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-8">
+        <main class="main-content flex-1 p-8">
             <!-- Dashboard Page -->
             <div id="dashboard" class="page active">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -97,6 +187,441 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <!-- Debts Page -->
+            <div id="debts" class="page">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Personal IOUs</h2>
+                        <button id="addDebtBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Add Debt
+                        </button>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">I Owe</h3>
+                            <p class="text-3xl font-bold text-red-600"><span id="totalIOwe">$0.00</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Others Owe Me</h3>
+                            <p class="text-3xl font-bold text-green-600"><span id="totalOwedToMe">$0.00</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Net Balance</h3>
+                            <p class="text-3xl font-bold text-blue-600"><span id="netDebtBalance">$0.00</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Total Debts</h3>
+                            <p class="text-3xl font-bold text-gray-800"><span id="totalDebts">0</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Person</label>
+                                <select id="debtPersonFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All People</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Type</label>
+                                <select id="debtTypeFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Types</option>
+                                    <option value="owe">I Owe</option>
+                                    <option value="owed">They Owe Me</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <select id="debtStatusFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="paid">Paid</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button id="clearDebtFilters" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                                    Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Debts by Person -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- People I Owe -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                            <div class="p-4 border-b bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 border-red-200 dark:border-red-700">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-hand-holding-usd text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-red-800 dark:text-red-200">People I Owe</h3>
+                                        <p class="text-sm text-red-600 dark:text-red-300">Money you need to pay back</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="peopleIOwe" class="p-4 space-y-4 min-h-[200px]">
+                                <!-- I owe debts will be inserted here -->
+                            </div>
+                        </div>
+
+                        <!-- People Who Owe Me -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                            <div class="p-4 border-b bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 border-green-200 dark:border-green-700">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-piggy-bank text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-green-800 dark:text-green-200">People Who Owe Me</h3>
+                                        <p class="text-sm text-green-600 dark:text-green-300">Money coming your way</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="peopleWhoOweMe" class="p-4 space-y-4 min-h-[200px]">
+                                <!-- They owe me debts will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- All Debts Table -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">All Debts</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Person</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allDebts" class="divide-y divide-gray-200">
+                                    <!-- Debts will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscriptions Page -->
+            <div id="subscriptions" class="page">
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Subscription Management</h2>
+                        <button id="addSubscriptionBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Add Subscription
+                        </button>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Active Subscriptions</h3>
+                            <p class="text-3xl font-bold text-blue-600"><span id="totalActiveSubscriptions">0</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Monthly Cost</h3>
+                            <p class="text-3xl font-bold text-green-600"><span id="monthlySubscriptionCost">$0.00</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Yearly Cost</h3>
+                            <p class="text-3xl font-bold text-purple-600"><span id="yearlySubscriptionCost">$0.00</span></p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-gray-500 text-sm">Due This Week</h3>
+                            <p class="text-3xl font-bold text-orange-600"><span id="upcomingThisWeek">0</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Category</label>
+                                <select id="subscriptionCategoryFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Categories</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Software">Software</option>
+                                    <option value="Fitness">Fitness</option>
+                                    <option value="News">News</option>
+                                    <option value="Music">Music</option>
+                                    <option value="Storage">Storage</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Billing Cycle</label>
+                                <select id="subscriptionCycleFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Cycles</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <select id="subscriptionStatusFilter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="paused">Paused</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button id="clearSubscriptionFilters" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                                    Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subscription Categories -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Category Breakdown -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                            <div class="p-4 border-b bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-chart-pie text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200">By Category</h3>
+                                        <p class="text-sm text-blue-600 dark:text-blue-300">Subscription breakdown</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="subscriptionCategories" class="p-4 space-y-3 min-h-[200px]">
+                                <!-- Category breakdown will be inserted here -->
+                            </div>
+                        </div>
+
+                        <!-- Upcoming Payments -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                            <div class="p-4 border-b bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-calendar-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-orange-800 dark:text-orange-200">Upcoming Payments</h3>
+                                        <p class="text-sm text-orange-600 dark:text-orange-300">Next 30 days</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="upcomingPayments" class="p-4 space-y-3 min-h-[200px]">
+                                <!-- Upcoming payments will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- All Subscriptions Table -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">All Subscriptions</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Service</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cost</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Billing Cycle</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Next Payment</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allSubscriptions" class="divide-y divide-gray-200">
+                                    <!-- Subscriptions will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Debt Modal -->
+            <div id="debtModal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="text-xl font-bold">Add Debt</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <form id="debtForm" class="p-4">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="debtPersonName">
+                                Person Name
+                            </label>
+                            <input type="text" id="debtPersonName" name="person_name" required
+                                placeholder="Enter person's name"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="debtAmount">
+                                Amount
+                            </label>
+                            <input type="number" id="debtAmount" name="amount" step="0.01" required
+                                placeholder="Enter amount"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="debtType">
+                                Type
+                            </label>
+                            <select id="debtType" name="type" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="owe">I Owe This Person</option>
+                                <option value="owed">This Person Owes Me</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="debtDescription">
+                                Description
+                            </label>
+                            <textarea id="debtDescription" name="description" rows="3"
+                                placeholder="What is this debt for?"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="debtCreatedDate">
+                                Created Date
+                            </label>
+                            <input type="date" id="debtCreatedDate" name="created_date" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="debtDueDate">
+                                Due Date (Optional)
+                            </label>
+                            <input type="date" id="debtDueDate" name="due_date"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                Save Debt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Add/Edit Subscription Modal -->
+            <div id="subscriptionModal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="text-xl font-bold" id="subscriptionModalTitle">Add Subscription</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <form id="subscriptionForm" class="p-4">
+                        <input type="hidden" id="subscriptionId" name="subscription_id">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="subscriptionName">
+                                Service Name
+                            </label>
+                            <input type="text" id="subscriptionName" name="name" required
+                                placeholder="e.g., Netflix, Spotify, Adobe Creative Cloud"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="subscriptionCost">
+                                    Cost
+                                </label>
+                                <input type="number" id="subscriptionCost" name="cost" step="0.01" required
+                                    placeholder="Enter cost"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="subscriptionBillingCycle">
+                                    Billing Cycle
+                                </label>
+                                <select id="subscriptionBillingCycle" name="billing_cycle" required
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly" selected>Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="subscriptionCategory">
+                                    Category
+                                </label>
+                                <select id="subscriptionCategory" name="category"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Software">Software</option>
+                                    <option value="Fitness">Fitness</option>
+                                    <option value="News">News</option>
+                                    <option value="Music">Music</option>
+                                    <option value="Storage">Storage</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="subscriptionNextBilling">
+                                    Next Billing Date
+                                </label>
+                                <input type="date" id="subscriptionNextBilling" name="next_billing_date" required
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                        </div>
+                        <div class="mb-4" id="subscriptionStatusContainer" style="display: none;">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="subscriptionStatus">
+                                Status
+                            </label>
+                            <select id="subscriptionStatus" name="status"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="active">Active</option>
+                                <option value="paused">Paused</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="subscriptionDescription">
+                                Description (Optional)
+                            </label>
+                            <textarea id="subscriptionDescription" name="description" rows="3"
+                                placeholder="Additional notes about this subscription"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" id="subscriptionSubmitBtn">
+                                Save Subscription
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -249,81 +774,191 @@
                 </div>
             </div>
 
-            <!-- Budget Page -->
-            <div id="budget" class="page">
-                <div class="mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Budget Management</h2>
-                        <button id="addBudgetBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            Add Budget
-                        </button>
-                    </div>
-
-                    <!-- Budget Overview -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Total Budget</h3>
-                            <p class="text-3xl font-bold text-gray-800">$<span id="totalBudget">0.00</span></p>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Total Spent</h3>
-                            <p class="text-3xl font-bold text-red-600">$<span id="totalSpent">0.00</span></p>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Remaining</h3>
-                            <p class="text-3xl font-bold text-green-600">$<span id="remainingBudget">0.00</span></p>
-                        </div>
-                    </div>
-
-                    <!-- Budget Categories -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="p-4 border-b">
-                            <h3 class="text-lg font-semibold">Budget Categories</h3>
-                        </div>
-                        <div class="divide-y divide-gray-200">
-                            <div id="budgetCategories">
-                                <!-- Budget categories will be inserted here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Goals Page -->
             <div id="goals" class="page">
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Financial Goals</h2>
-                        <button id="addGoalBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            Add Goal
+                        <h2 class="text-2xl font-bold">Expense Limits & Goals</h2>
+                        <button id="addExpenseLimitBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Add Expense Limit
                         </button>
                     </div>
 
                     <!-- Goals Overview -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Active Goals</h3>
+                            <h3 class="text-gray-500 text-sm">Active Limits</h3>
                             <p class="text-3xl font-bold text-gray-800"><span id="activeGoals">0</span></p>
                         </div>
                         <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Completed Goals</h3>
-                            <p class="text-3xl font-bold text-green-600"><span id="completedGoals">0</span></p>
+                            <h3 class="text-gray-500 text-sm">Exceeded Limits</h3>
+                            <p class="text-3xl font-bold text-red-600"><span id="exceededLimits">0</span></p>
                         </div>
                         <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-gray-500 text-sm">Total Saved</h3>
-                            <p class="text-3xl font-bold text-blue-600">$<span id="totalSaved">0.00</span></p>
+                            <h3 class="text-gray-500 text-sm">Total Spent</h3>
+                            <p class="text-3xl font-bold text-blue-600"><span id="totalSpent">0.00</span></p>
                         </div>
                     </div>
 
-                    <!-- Goals List -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="p-4 border-b">
-                            <h3 class="text-lg font-semibold">Your Goals</h3>
-                        </div>
-                        <div id="goalsList" class="divide-y divide-gray-200">
-                            <!-- Goals will be inserted here -->
+                    <!-- Filters -->
+                    <div class="bg-white rounded-lg shadow p-4 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="goalsStartDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="goalsEndDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Category</label>
+                                <select id="goalsCategory" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Show</label>
+                                <select id="goalsFilterType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="all">All</option>
+                                    <option value="exceeded">Exceeded Only</option>
+                                    <option value="within">Within Limits</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Charts Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Category Spending vs Limit Chart -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Category Spending vs Limits</h3>
+                            <canvas id="category-spending-chart"></canvas>
+                        </div>
+                        <!-- Monthly Trend Chart -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Monthly Spending Trend</h3>
+                            <canvas id="monthly-trend-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Expense Limits List -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Your Expense Limits</h3>
+                        </div>
+                        <div id="expense-limits-list" class="divide-y divide-gray-200 p-4">
+                            <!-- Expense limits will be inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Exceeded Transactions -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden mt-6">
+                        <div class="p-4 border-b">
+                            <h3 class="text-lg font-semibold">Transactions Exceeding Limits</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Limit</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Exceeded By</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="exceededTransactions" class="divide-y divide-gray-200">
+                                    <!-- Exceeded transactions will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Expense Limit Modal -->
+            <div id="expense-limit-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="text-xl font-bold">Add Expense Limit</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <form id="add-expense-limit-form" class="p-4">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+                                Category
+                            </label>
+                            <select id="category" name="category" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="Food">Food</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="limit_amount">
+                                Limit Amount
+                            </label>
+                            <input type="number" 
+                                id="limit_amount" 
+                                name="limit_amount" 
+                                min="0" 
+                                step="0.01" 
+                                required
+                                placeholder="Enter amount"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="period_type">
+                                Period Type
+                            </label>
+                            <select id="period_type" name="period_type" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                                <option value="custom">Custom Period</option>
+                            </select>
+                        </div>
+                        <div id="monthlyYearlyFields" class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="period_start">
+                                Start Month
+                            </label>
+                            <input type="month" 
+                                id="period_start" 
+                                name="period_start" 
+                                required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white bg-white dark:bg-gray-800 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div id="customDateFields" class="mb-4 hidden">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="start_date">
+                                    Start Date
+                                </label>
+                                <input type="date" 
+                                    id="start_date" 
+                                    name="start_date" 
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="end_date">
+                                    End Date
+                                </label>
+                                <input type="date" 
+                                    id="end_date" 
+                                    name="end_date" 
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                Save Limit
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -426,6 +1061,13 @@
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
                 <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="date">
+                        Date
+                    </label>
+                    <input type="date" id="date" name="date" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
                         Description
                     </label>
@@ -438,15 +1080,15 @@
                     </label>
                     <select id="type" name="type" required
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        <option value="income">Income</option>
+                        <option value="income" selected>Income</option>
                         <option value="expense">Expense</option>
                     </select>
                 </div>
-                <div id="categoryContainer" class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
+                <div id="categoryContainer" class="mb-4" style="display: none;">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="transactionCategorySelect">
                         Category
                     </label>
-                    <select id="category" name="category" required
+                    <select id="transactionCategorySelect" name="category" required
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="Food">Food</option>
                         <option value="Transportation">Transportation</option>

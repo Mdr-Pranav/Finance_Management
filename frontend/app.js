@@ -181,6 +181,260 @@ const DataManager = {
     }
 };
 
+// Expense Limits Management
+const ExpenseLimitsManager = {
+    baseUrl: 'http://localhost:3000/api',
+
+    async fetchExpenseLimits() {
+        try {
+            const response = await fetch(`${this.baseUrl}/expense-limits`);
+            if (!response.ok) throw new Error('Failed to fetch expense limits');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching expense limits:', error);
+            return [];
+        }
+    },
+
+    async addExpenseLimit(category, limitAmount, periodType, startDate, endDate) {
+        try {
+            console.log('Adding expense limit:', { category, limitAmount, periodType, startDate, endDate });
+            const response = await fetch(`${this.baseUrl}/expense-limits`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    category, 
+                    limit_amount: limitAmount,
+                    period_type: periodType,
+                    start_date: startDate,
+                    end_date: endDate
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to add expense limit');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error adding expense limit:', error);
+            throw error;
+        }
+    },
+
+    async fetchExpenseLimitsStatus() {
+        try {
+            const response = await fetch(`${this.baseUrl}/expense-limits/status`);
+            if (!response.ok) throw new Error('Failed to fetch expense limits status');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching expense limits status:', error);
+            return [];
+        }
+    },
+
+    async fetchExceededTransactions() {
+        try {
+            const response = await fetch(`${this.baseUrl}/expense-limits/exceeded-transactions`);
+            if (!response.ok) throw new Error('Failed to fetch exceeded transactions');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching exceeded transactions:', error);
+            return [];
+        }
+    },
+
+    async deleteExpenseLimit(id) {
+        try {
+            console.log('Deleting expense limit with ID:', id);
+            const response = await fetch(`${this.baseUrl}/expense-limits/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete expense limit');
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Error deleting expense limit:', error);
+            throw error;
+        }
+    }
+};
+
+// Debts Management
+const DebtsManager = {
+    baseUrl: 'http://localhost:3000/api',
+
+    async fetchDebts() {
+        try {
+            const response = await fetch(`${this.baseUrl}/debts`);
+            if (!response.ok) throw new Error('Failed to fetch debts');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching debts:', error);
+            return [];
+        }
+    },
+
+    async addDebt(debt) {
+        try {
+            const response = await fetch(`${this.baseUrl}/debts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(debt),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to add debt');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error adding debt:', error);
+            throw error;
+        }
+    },
+
+    async updateDebtStatus(id, status) {
+        try {
+            const response = await fetch(`${this.baseUrl}/debts/${id}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status }),
+            });
+
+            if (!response.ok) throw new Error('Failed to update debt status');
+            return await response.json();
+        } catch (error) {
+            console.error('Error updating debt status:', error);
+            throw error;
+        }
+    },
+
+    async deleteDebt(id) {
+        try {
+            const response = await fetch(`${this.baseUrl}/debts/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) throw new Error('Failed to delete debt');
+            return true;
+        } catch (error) {
+            console.error('Error deleting debt:', error);
+            throw error;
+        }
+    },
+
+    async fetchDebtsSummary() {
+        try {
+            const response = await fetch(`${this.baseUrl}/debts/summary`);
+            if (!response.ok) throw new Error('Failed to fetch debts summary');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching debts summary:', error);
+            return [];
+        }
+    }
+};
+
+// Subscriptions Management
+const SubscriptionsManager = {
+    baseUrl: 'http://localhost:3000/api',
+
+    async fetchSubscriptions() {
+        try {
+            const response = await fetch(`${this.baseUrl}/subscriptions`);
+            if (!response.ok) throw new Error('Failed to fetch subscriptions');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching subscriptions:', error);
+            return [];
+        }
+    },
+
+    async addSubscription(subscription) {
+        try {
+            const response = await fetch(`${this.baseUrl}/subscriptions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(subscription),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to add subscription');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error adding subscription:', error);
+            throw error;
+        }
+    },
+
+    async updateSubscription(id, subscription) {
+        try {
+            const response = await fetch(`${this.baseUrl}/subscriptions/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(subscription),
+            });
+
+            if (!response.ok) throw new Error('Failed to update subscription');
+            return await response.json();
+        } catch (error) {
+            console.error('Error updating subscription:', error);
+            throw error;
+        }
+    },
+
+    async deleteSubscription(id) {
+        try {
+            const response = await fetch(`${this.baseUrl}/subscriptions/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) throw new Error('Failed to delete subscription');
+            return true;
+        } catch (error) {
+            console.error('Error deleting subscription:', error);
+            throw error;
+        }
+    },
+
+    async fetchSubscriptionsSummary() {
+        try {
+            const response = await fetch(`${this.baseUrl}/subscriptions/summary`);
+            if (!response.ok) throw new Error('Failed to fetch subscriptions summary');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching subscriptions summary:', error);
+            return {
+                total_active: 0,
+                monthly_cost: 0,
+                yearly_cost: 0,
+                upcoming_this_week: 0,
+                upcoming_this_month: 0,
+                by_category: {}
+            };
+        }
+    }
+};
+
 // UI Manager
 const UIManager = {
     // Navigation
@@ -213,9 +467,22 @@ const UIManager = {
         const addButtons = document.querySelectorAll('#addTransactionBtn, #addTransactionBtn2');
         const closeButton = modal.querySelector('.close-modal');
         const form = document.getElementById('transactionForm');
+        const dateInput = document.getElementById('date');
+
+        // Set default date to today
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+
+        // Load categories when modal is initialized
+        this.loadCategories();
 
         addButtons.forEach(button => {
             button.addEventListener('click', () => {
+                // Reset form and set today's date
+                form.reset();
+                dateInput.value = today;
+                // Refresh categories when opening modal
+                this.loadCategories();
                 modal.classList.remove('hidden');
             });
         });
@@ -226,12 +493,14 @@ const UIManager = {
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const formData = new FormData(form);
+            const formData = new FormData(e.target);
+            const type = formData.get('type');
             const transaction = {
-                amount: parseFloat(formData.get('amount')),
+                amount: formData.get('amount'),
                 description: formData.get('description'),
-                type: formData.get('type'),
-                category: formData.get('category')
+                category: type === 'income' ? 'Income' : formData.get('category'),
+                type: type,
+                date: formData.get('date')
             };
 
             try {
@@ -240,7 +509,9 @@ const UIManager = {
                 this.updateCurrencyDisplay(localStorage.getItem('currency') || 'USD');
                 this.updateTransactionsList();
                 modal.classList.add('hidden');
+                // Reset form and set today's date
                 form.reset();
+                dateInput.value = today;
             } catch (error) {
                 console.error('Error adding transaction:', error);
                 alert('Failed to add transaction. Please try again.');
@@ -350,6 +621,16 @@ const UIManager = {
         const recentTransactions = document.getElementById('recentTransactions');
         const allTransactions = document.getElementById('allTransactions');
 
+        // Get currency settings
+        const currency = localStorage.getItem('currency') || 'USD';
+        const currencySymbols = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'INR': '₹'
+        };
+        const symbol = currencySymbols[currency];
+
         const createTransactionRow = (transaction) => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -357,7 +638,10 @@ const UIManager = {
                 <td class="px-6 py-4">${transaction.description}</td>
                 <td class="px-6 py-4">${transaction.category}</td>
                 <td class="px-6 py-4 ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}">
-                    ${transaction.type === 'income' ? '+' : '-'}$${Math.abs(transaction.amount).toFixed(2)}
+                    ${transaction.type === 'income' ? '+' : '-'}${symbol}${Math.abs(transaction.amount).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })}
                 </td>
                 <td class="px-6 py-4">
                     <button class="text-red-600 hover:text-red-800 delete-transaction" data-id="${transaction.id}">
@@ -384,6 +668,16 @@ const UIManager = {
         const endDate = document.getElementById('transactionEndDate').value;
         const category = document.getElementById('transactionCategory').value;
         const type = document.getElementById('transactionType').value;
+
+        // Get currency settings
+        const currency = localStorage.getItem('currency') || 'USD';
+        const currencySymbols = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'INR': '₹'
+        };
+        const symbol = currencySymbols[currency];
 
         // Filter transactions
         let filteredTransactions = transactions;
@@ -412,8 +706,8 @@ const UIManager = {
             );
         }
 
-        // Sort by date (newest first)
-        filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Don't sort here since we want to maintain the order from the backend (most recently entered first)
+        // filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         // Update the table
         allTransactions.innerHTML = '';
@@ -425,7 +719,10 @@ const UIManager = {
                 <td class="px-6 py-4">${transaction.category}</td>
                 <td class="px-6 py-4">${transaction.type}</td>
                 <td class="px-6 py-4 ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}">
-                    ${transaction.type === 'income' ? '+' : '-'}$${Math.abs(transaction.amount).toFixed(2)}
+                    ${transaction.type === 'income' ? '+' : '-'}${symbol}${Math.abs(transaction.amount).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })}
                 </td>
                 <td class="px-6 py-4">
                     <button class="text-red-600 hover:text-red-800 delete-transaction" data-id="${transaction.id}">
@@ -666,6 +963,16 @@ const UIManager = {
         const tbody = document.getElementById('reportTransactions');
         tbody.innerHTML = '';
 
+        // Get currency settings
+        const currency = localStorage.getItem('currency') || 'USD';
+        const currencySymbols = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'INR': '₹'
+        };
+        const symbol = currencySymbols[currency];
+
         transactions.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(transaction => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -674,7 +981,10 @@ const UIManager = {
                 <td class="px-6 py-4">${transaction.category}</td>
                 <td class="px-6 py-4">${transaction.type}</td>
                 <td class="px-6 py-4 ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}">
-                    ${transaction.type === 'income' ? '+' : '-'}$${Math.abs(transaction.amount).toFixed(2)}
+                    ${transaction.type === 'income' ? '+' : '-'}${symbol}${Math.abs(transaction.amount).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })}
                 </td>
             `;
             tbody.appendChild(row);
@@ -761,10 +1071,12 @@ const UIManager = {
             }
         });
 
-        // Handle category deletion
+        // Handle category deletion - improved event delegation
         categoriesList.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-category')) {
-                const category = e.target.dataset.category;
+            // Find the delete button, whether the click was on the button or the icon inside it
+            const deleteButton = e.target.closest('.delete-category');
+            if (deleteButton) {
+                const category = deleteButton.dataset.category;
                 this.deleteCategory(category);
             }
         });
@@ -822,7 +1134,7 @@ const UIManager = {
         ).join('');
 
         // Update transaction form category select
-        const transactionCategorySelect = document.getElementById('category');
+        const transactionCategorySelect = document.getElementById('transactionCategorySelect');
         if (transactionCategorySelect) {
             const currentValue = transactionCategorySelect.value;
             transactionCategorySelect.innerHTML = categoryOptions;
@@ -876,16 +1188,23 @@ const UIManager = {
         clearCacheBtn.addEventListener('click', () => this.clearCache());
     },
 
-    exportData() {
-        const data = {
-            transactions: JSON.parse(localStorage.getItem('transactions')) || [],
-            categories: JSON.parse(localStorage.getItem('categories')) || [],
-            settings: {
+    async exportData() {
+        try {
+            // Fetch data from backend API
+            const [transactions, categories] = await Promise.all([
+                APIManager.getTransactions(),
+                (async () => {
+                    // Try to fetch categories from localStorage, fallback to default if not found
+                    const localCategories = localStorage.getItem('categories');
+                    if (localCategories) return JSON.parse(localCategories);
+                    return ['Food', 'Transportation', 'Entertainment', 'Bills', 'Other'];
+                })()
+            ]);
+            const settings = {
                 currency: localStorage.getItem('currency') || 'USD',
                 theme: localStorage.getItem('theme') || 'light'
-            }
         };
-
+            const data = { transactions, categories, settings };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -895,6 +1214,10 @@ const UIManager = {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error exporting data:', error);
+            alert('Failed to export data. Please try again.');
+        }
     },
 
     importData() {
@@ -942,16 +1265,26 @@ const UIManager = {
         input.click();
     },
 
-    clearData() {
+    async clearData() {
         if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+            if (confirm('This will permanently delete ALL your data from the database and your browser. Are you absolutely sure?')) {
+                try {
+                    // Call backend to clear all data
+                    await fetch('http://localhost:3000/api/clear-all', { method: 'DELETE' });
+                } catch (error) {
+                    console.error('Error clearing backend data:', error);
+                    alert('Failed to clear data from the database.');
+                }
+                // Clear localStorage
             localStorage.clear();
             this.loadCategories();
             this.initCurrencySettings();
             this.initThemeSettings();
-            this.updateDashboard();
+                await this.updateDashboard();
             this.updateCurrencyDisplay(localStorage.getItem('currency') || 'USD');
-            this.updateTransactionsList();
+                await this.updateTransactionsList();
             alert('All data has been cleared.');
+            }
         }
     },
 
@@ -1005,7 +1338,10 @@ const UIManager = {
         this.initReports();
         this.initTransactionFilters();
         this.initializeThemeToggle();
+        this.initializeSidebarToggle();
         this.initSettings();
+        this.initializeDebts();
+        this.initializeSubscriptions();
         
         // Update dashboard and transactions list
         console.log('Updating dashboard...');
@@ -1021,10 +1357,1508 @@ const UIManager = {
                 await this.updateTransactionsList();
             }
         });
+    },
+
+    initializeSidebarToggle() {
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (sidebarToggle && sidebar) {
+            // Check if sidebar was previously collapsed
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+            }
+
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                
+                // Save state to localStorage
+                const collapsed = sidebar.classList.contains('collapsed');
+                localStorage.setItem('sidebarCollapsed', collapsed.toString());
+                
+                // Update toggle button icon
+                const icon = sidebarToggle.querySelector('i');
+                if (collapsed) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-chevron-right');
+                } else {
+                    icon.classList.remove('fa-chevron-right');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Set initial icon based on state
+            const icon = sidebarToggle.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-chevron-right');
+            }
+        }
+    },
+
+    async updateExpenseLimitsList() {
+        const limitsList = document.getElementById('expense-limits-list');
+        if (!limitsList) {
+            console.error('Expense limits list container not found');
+            return;
+        }
+
+        try {
+            const limits = await ExpenseLimitsManager.fetchExpenseLimitsStatus();
+            console.log('Fetched expense limits:', limits);
+            
+            // Apply filters
+            const startDate = document.getElementById('goalsStartDate').value;
+            const endDate = document.getElementById('goalsEndDate').value;
+            const category = document.getElementById('goalsCategory').value;
+            const filterType = document.getElementById('goalsFilterType').value;
+
+            let filteredLimits = limits;
+
+            if (category) {
+                filteredLimits = filteredLimits.filter(limit => limit.category === category);
+            }
+
+            if (filterType === 'exceeded') {
+                filteredLimits = filteredLimits.filter(limit => limit.exceeded);
+            } else if (filterType === 'within') {
+                filteredLimits = filteredLimits.filter(limit => !limit.exceeded);
+            }
+            
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+            
+            limitsList.innerHTML = filteredLimits.map(limit => `
+                <div class="bg-white rounded-lg shadow p-4 ${limit.exceeded ? 'border-l-4 border-red-500' : ''}">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold">${limit.category}</h3>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm ${limit.exceeded ? 'text-red-500' : 'text-green-500'}">
+                                ${limit.exceeded ? 'Exceeded' : 'Within Limit'}
+                            </span>
+                            <button class="delete-expense-limit text-red-600 hover:text-red-800 p-1" data-id="${limit.id}" title="Delete Limit">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>Limit: ${symbol}${limit.limit_amount.toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            })}</span>
+                            <span>Spent: ${symbol}${limit.spent.toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            })}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: ${Math.min(100, (limit.spent / limit.limit_amount) * 100)}%"></div>
+                        </div>
+                        <div class="mt-2 text-sm ${limit.exceeded ? 'text-red-500' : 'text-green-500'}">
+                            ${limit.exceeded 
+                                ? `Exceeded by ${symbol}${limit.exceededBy.toLocaleString('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })}`
+                                : `${symbol}${limit.remaining.toLocaleString('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })} remaining`}
+                        </div>
+                        <div class="mt-2 text-sm text-gray-600">
+                            Period: ${new Date(limit.start_date).toLocaleDateString()} - ${new Date(limit.end_date).toLocaleDateString()}
+                            <span class="ml-2 text-xs text-gray-500">(${limit.period_type})</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add delete event listeners
+            document.querySelectorAll('.delete-expense-limit').forEach(button => {
+                button.addEventListener('click', async () => {
+                    if (confirm('Are you sure you want to delete this expense limit?')) {
+                        const id = button.dataset.id;
+                        try {
+                            await ExpenseLimitsManager.deleteExpenseLimit(id);
+                            
+                            // Update all related UI elements
+                            await Promise.all([
+                                this.updateExpenseLimitsList(),
+                                this.updateExpenseLimitsCharts(),
+                                this.updateExceededTransactionsList()
+                            ]);
+                            
+                            console.log('Expense limit deleted successfully');
+                        } catch (error) {
+                            console.error('Error deleting expense limit:', error);
+                            alert('Failed to delete expense limit. Please try again.');
+                        }
+                    }
+                });
+            });
+
+            // Update overview numbers
+            const activeGoals = document.getElementById('activeGoals');
+            const exceededLimits = document.getElementById('exceededLimits');
+            const totalSpent = document.getElementById('totalSpent');
+
+            if (activeGoals) activeGoals.textContent = filteredLimits.length;
+            if (exceededLimits) exceededLimits.textContent = filteredLimits.filter(limit => limit.exceeded).length;
+            if (totalSpent) {
+                const total = filteredLimits.reduce((sum, limit) => sum + limit.spent, 0);
+                totalSpent.textContent = `${symbol}${total.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}`;
+            }
+        } catch (error) {
+            console.error('Error updating expense limits list:', error);
+            limitsList.innerHTML = '<div class="text-red-500 p-4">Error loading expense limits</div>';
+        }
+    },
+
+    async updateExceededTransactionsList() {
+        try {
+            const exceededList = document.getElementById('exceededTransactions');
+            if (!exceededList) {
+                console.error('Exceeded transactions list container not found');
+                return;
+            }
+
+            const transactions = await ExpenseLimitsManager.fetchExceededTransactions();
+            console.log('Fetched exceeded transactions:', transactions);
+            
+            // Apply filters
+            const startDate = document.getElementById('goalsStartDate').value;
+            const endDate = document.getElementById('goalsEndDate').value;
+            const category = document.getElementById('goalsCategory').value;
+
+            let filteredTransactions = transactions;
+
+            if (startDate) {
+                filteredTransactions = filteredTransactions.filter(t => 
+                    new Date(t.date) >= new Date(startDate)
+                );
+            }
+
+            if (endDate) {
+                filteredTransactions = filteredTransactions.filter(t => 
+                    new Date(t.date) <= new Date(endDate)
+                );
+            }
+
+            if (category) {
+                filteredTransactions = filteredTransactions.filter(t => 
+                    t.category === category
+                );
+            }
+            
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+            
+            exceededList.innerHTML = filteredTransactions.map(transaction => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${new Date(transaction.date).toLocaleDateString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${transaction.category}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${transaction.description}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">${symbol}${Number(transaction.amount).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">${symbol}${Number(transaction.exceededBy).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })}</td>
+                </tr>
+            `).join('');
+        } catch (error) {
+            console.error('Error updating exceeded transactions list:', error);
+            const exceededList = document.getElementById('exceededTransactions');
+            if (exceededList) {
+                exceededList.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error loading exceeded transactions</td></tr>';
+            }
+        }
+    },
+
+    async updateExpenseLimitsCharts() {
+        try {
+            const status = await ExpenseLimitsManager.fetchExpenseLimitsStatus();
+            console.log('Fetched expense limits status for charts:', status);
+            
+            // Apply filters
+            const category = document.getElementById('goalsCategory').value;
+            const filterType = document.getElementById('goalsFilterType').value;
+
+            let filteredStatus = status;
+
+            if (category) {
+                filteredStatus = filteredStatus.filter(s => s.category === category);
+            }
+
+            if (filterType === 'exceeded') {
+                filteredStatus = filteredStatus.filter(s => s.exceeded);
+            } else if (filterType === 'within') {
+                filteredStatus = filteredStatus.filter(s => !s.exceeded);
+            }
+            
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+            
+            // Category Spending vs Limits Chart
+            const categoryChartElement = document.getElementById('category-spending-chart');
+            if (categoryChartElement) {
+                // Destroy existing chart if it exists
+                if (window.categorySpendingChart instanceof Chart) {
+                    window.categorySpendingChart.destroy();
+                }
+
+                window.categorySpendingChart = new Chart(categoryChartElement, {
+                    type: 'bar',
+                    data: {
+                        labels: filteredStatus.map(s => s.category),
+                        datasets: [
+                            {
+                                label: 'Spent',
+                                data: filteredStatus.map(s => s.spent),
+                                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                                borderColor: 'rgb(59, 130, 246)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Limit',
+                                data: filteredStatus.map(s => s.limit_amount),
+                                backgroundColor: 'rgba(16, 185, 129, 0.5)',
+                                borderColor: 'rgb(16, 185, 129)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return symbol + value.toLocaleString('en-US', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + symbol + context.raw.toLocaleString('en-US', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Monthly Spending Trend Chart
+            const trendChartElement = document.getElementById('monthly-trend-chart');
+            if (trendChartElement) {
+                const transactions = await DataManager.getTransactions();
+                const monthlyData = {};
+                
+                // Apply date filters
+                const startDate = document.getElementById('goalsStartDate').value;
+                const endDate = document.getElementById('goalsEndDate').value;
+                
+                transactions.forEach(transaction => {
+                    if (transaction.type === 'expense') {
+                        const transactionDate = new Date(transaction.date);
+                        if (
+                            (!startDate || transactionDate >= new Date(startDate)) &&
+                            (!endDate || transactionDate <= new Date(endDate)) &&
+                            (!category || transaction.category === category)
+                        ) {
+                            const month = transaction.date.substring(0, 7); // YYYY-MM
+                            monthlyData[month] = (monthlyData[month] || 0) + Number(transaction.amount);
+                        }
+                    }
+                });
+
+                // Destroy existing chart if it exists
+                if (window.monthlyTrendChart instanceof Chart) {
+                    window.monthlyTrendChart.destroy();
+                }
+
+                window.monthlyTrendChart = new Chart(trendChartElement, {
+                    type: 'line',
+                    data: {
+                        labels: Object.keys(monthlyData).sort(),
+                        datasets: [{
+                            label: 'Monthly Spending',
+                            data: Object.keys(monthlyData).sort().map(month => monthlyData[month]),
+                            fill: false,
+                            borderColor: 'rgb(59, 130, 246)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return symbol + value.toLocaleString('en-US', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + symbol + context.raw.toLocaleString('en-US', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error updating expense limits charts:', error);
+        }
+    },
+
+    initGoalsFilters() {
+        const filterInputs = [
+            'goalsStartDate',
+            'goalsEndDate',
+            'goalsCategory',
+            'goalsFilterType'
+        ];
+
+        filterInputs.forEach(inputId => {
+            document.getElementById(inputId).addEventListener('change', async () => {
+                await Promise.all([
+                    this.updateExpenseLimitsList(),
+                    this.updateExpenseLimitsCharts(),
+                    this.updateExceededTransactionsList()
+                ]);
+            });
+        });
+
+        // Set default date range to current month
+        const now = new Date();
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        
+        document.getElementById('goalsStartDate').value = firstDay.toISOString().split('T')[0];
+        document.getElementById('goalsEndDate').value = lastDay.toISOString().split('T')[0];
+
+        // Update category options
+        const categories = JSON.parse(localStorage.getItem('categories')) || [
+            'Food', 'Transportation', 'Entertainment', 'Bills', 'Other'
+        ];
+        const categorySelect = document.getElementById('goalsCategory');
+        if (categorySelect) {
+            categorySelect.innerHTML = '<option value="">All Categories</option>' + 
+                categories.map(category => `<option value="${category}">${category}</option>`).join('');
+        }
+
+        // Also update the category options in the expense limit modal
+        const modalCategorySelect = document.getElementById('category');
+        if (modalCategorySelect) {
+            modalCategorySelect.innerHTML = categories.map(category => 
+                `<option value="${category}">${category}</option>`
+            ).join('');
+        }
+    },
+
+    async initializeExpenseLimits() {
+        console.log('Initializing expense limits...');
+        
+        // Initialize expense limit modal
+        const modal = document.getElementById('expense-limit-modal');
+        const addButton = document.getElementById('addExpenseLimitBtn');
+        const closeButton = modal.querySelector('.close-modal');
+        const form = document.getElementById('add-expense-limit-form');
+        const periodTypeSelect = document.getElementById('period_type');
+        const monthlyYearlyFields = document.getElementById('monthlyYearlyFields');
+        const customDateFields = document.getElementById('customDateFields');
+
+        console.log('Modal elements:', {
+            modal: modal ? 'Found' : 'Not found',
+            addButton: addButton ? 'Found' : 'Not found',
+            closeButton: closeButton ? 'Found' : 'Not found',
+            form: form ? 'Found' : 'Not found'
+        });
+
+        // Initialize filters
+        this.initGoalsFilters();
+
+        // Handle period type change
+        periodTypeSelect.addEventListener('change', () => {
+            const periodType = periodTypeSelect.value;
+            if (periodType === 'custom') {
+                monthlyYearlyFields.classList.add('hidden');
+                customDateFields.classList.remove('hidden');
+                document.getElementById('start_date').required = true;
+                document.getElementById('end_date').required = true;
+                document.getElementById('period_start').required = false;
+            } else {
+                monthlyYearlyFields.classList.remove('hidden');
+                customDateFields.classList.add('hidden');
+                document.getElementById('start_date').required = false;
+                document.getElementById('end_date').required = false;
+                document.getElementById('period_start').required = true;
+            }
+        });
+
+        // Add button click handler
+        addButton.addEventListener('click', () => {
+            console.log('Add button clicked');
+            // Set default dates
+            const today = new Date();
+            const endDate = new Date();
+            endDate.setMonth(endDate.getMonth() + 1);
+            
+            // Set default month for monthly/yearly periods
+            document.getElementById('period_start').value = today.toISOString().slice(0, 7);
+            
+            // Set default dates for custom period
+            document.getElementById('start_date').value = today.toISOString().split('T')[0];
+            document.getElementById('end_date').value = endDate.toISOString().split('T')[0];
+            
+            modal.classList.remove('hidden');
+        });
+
+        // Close button click handler
+        closeButton.addEventListener('click', () => {
+            console.log('Close button clicked');
+            modal.classList.add('hidden');
+        });
+
+        // Form submission handler
+        form.addEventListener('submit', async (e) => {
+            console.log('Form submitted');
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const category = formData.get('category');
+            const limitAmount = Number(formData.get('limit_amount'));
+            const periodType = formData.get('period_type');
+            
+            let startDate, endDate;
+            
+            if (periodType === 'custom') {
+                startDate = formData.get('start_date');
+                endDate = formData.get('end_date');
+            } else {
+                const periodStart = new Date(formData.get('period_start'));
+                startDate = periodStart.toISOString().split('T')[0];
+                
+                if (periodType === 'monthly') {
+                    endDate = new Date(periodStart.getFullYear(), periodStart.getMonth() + 1, 0).toISOString().split('T')[0];
+                } else { // yearly
+                    endDate = new Date(periodStart.getFullYear() + 1, periodStart.getMonth(), 0).toISOString().split('T')[0];
+                }
+            }
+
+            console.log('Form data:', { category, limitAmount, periodType, startDate, endDate });
+
+            try {
+                console.log('Sending request to add expense limit...');
+                await ExpenseLimitsManager.addExpenseLimit(category, limitAmount, periodType, startDate, endDate);
+                console.log('Expense limit added successfully');
+
+                // Update all related UI elements
+                await Promise.all([
+                    this.updateExpenseLimitsList(),
+                    this.updateExpenseLimitsCharts(),
+                    this.updateExceededTransactionsList()
+                ]);
+                
+                modal.classList.add('hidden');
+                form.reset();
+                
+                console.log('UI updated successfully');
+            } catch (error) {
+                console.error('Error adding expense limit:', error);
+                alert('Failed to add expense limit. Please try again.');
+            }
+        });
+
+        // Initial updates
+        console.log('Performing initial updates...');
+        await Promise.all([
+            this.updateExpenseLimitsList(),
+            this.updateExpenseLimitsCharts(),
+            this.updateExceededTransactionsList()
+        ]);
+        console.log('Expense limits initialization complete');
+    },
+
+    async initializeDebts() {
+        console.log('Initializing debts...');
+        
+        // Initialize debt modal
+        const modal = document.getElementById('debtModal');
+        const addButton = document.getElementById('addDebtBtn');
+        const closeButton = modal?.querySelector('.close-modal');
+        const form = document.getElementById('debtForm');
+        const createdDateInput = document.getElementById('debtCreatedDate');
+
+        console.log('Debt modal elements:', {
+            modal: modal ? 'Found' : 'Not found',
+            addButton: addButton ? 'Found' : 'Not found',
+            closeButton: closeButton ? 'Found' : 'Not found',
+            form: form ? 'Found' : 'Not found'
+        });
+
+        if (!modal || !addButton || !closeButton || !form) {
+            console.error('Some debt modal elements not found');
+            return;
+        }
+
+        // Set default date to today
+        const today = new Date().toISOString().split('T')[0];
+        if (createdDateInput) createdDateInput.value = today;
+
+        // Initialize filters
+        this.initDebtFilters();
+
+        // Handle add debt button click
+        addButton.addEventListener('click', () => {
+            console.log('Add debt button clicked');
+            form.reset();
+            if (createdDateInput) createdDateInput.value = today;
+            modal.classList.remove('hidden');
+        });
+
+        // Handle close button click
+        closeButton.addEventListener('click', () => {
+            console.log('Close button clicked');
+            modal.classList.add('hidden');
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            console.log('Debt form submitted');
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const debt = {
+                person_name: formData.get('person_name'),
+                amount: Number(formData.get('amount')),
+                description: formData.get('description'),
+                type: formData.get('type'),
+                created_date: formData.get('created_date'),
+                due_date: formData.get('due_date') || null
+            };
+
+            console.log('Debt data:', debt);
+
+            try {
+                console.log('Sending request to add debt...');
+                await DebtsManager.addDebt(debt);
+                console.log('Debt added successfully');
+
+                // Update all debt UI components
+                await Promise.all([
+                    this.updateDebtsSummary(),
+                    this.updateDebtsLists(),
+                    this.updateAllDebtsTable()
+                ]);
+                
+                modal.classList.add('hidden');
+                form.reset();
+                if (createdDateInput) createdDateInput.value = today;
+                
+                console.log('Debt UI updated successfully');
+            } catch (error) {
+                console.error('Error adding debt:', error);
+                alert('Failed to add debt. Please try again.');
+            }
+        });
+
+        // Initial update
+        console.log('Performing initial debt updates...');
+        await Promise.all([
+            this.updateDebtsSummary(),
+            this.updateDebtsLists(),
+            this.updateAllDebtsTable()
+        ]);
+        console.log('Debts initialization complete');
+    },
+
+    initDebtFilters() {
+        const filterInputs = [
+            'debtPersonFilter',
+            'debtTypeFilter',
+            'debtStatusFilter'
+        ];
+
+        filterInputs.forEach(inputId => {
+            const element = document.getElementById(inputId);
+            if (element) {
+                element.addEventListener('change', async () => {
+                    await Promise.all([
+                        this.updateDebtsLists(),
+                        this.updateAllDebtsTable()
+                    ]);
+                });
+            }
+        });
+
+        // Clear filters button
+        const clearButton = document.getElementById('clearDebtFilters');
+        if (clearButton) {
+            clearButton.addEventListener('click', async () => {
+                filterInputs.forEach(inputId => {
+                    const element = document.getElementById(inputId);
+                    if (element) element.value = '';
+                });
+                await Promise.all([
+                    this.updateDebtsLists(),
+                    this.updateAllDebtsTable()
+                ]);
+            });
+        }
+    },
+
+    async updateDebtsSummary() {
+        try {
+            const debts = await DebtsManager.fetchDebts();
+            
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+
+            // Calculate summary
+            const pendingDebts = debts.filter(d => d.status === 'pending');
+            const iOwe = pendingDebts.filter(d => d.type === 'owe').reduce((sum, d) => sum + Number(d.amount), 0);
+            const owedToMe = pendingDebts.filter(d => d.type === 'owed').reduce((sum, d) => sum + Number(d.amount), 0);
+            const netBalance = owedToMe - iOwe;
+
+            // Update summary cards
+            const elements = {
+                totalIOwe: document.getElementById('totalIOwe'),
+                totalOwedToMe: document.getElementById('totalOwedToMe'),
+                netDebtBalance: document.getElementById('netDebtBalance'),
+                totalDebts: document.getElementById('totalDebts')
+            };
+
+            if (elements.totalIOwe) {
+                elements.totalIOwe.textContent = `${symbol}${iOwe.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}`;
+            }
+
+            if (elements.totalOwedToMe) {
+                elements.totalOwedToMe.textContent = `${symbol}${owedToMe.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}`;
+            }
+
+            if (elements.netDebtBalance) {
+                elements.netDebtBalance.textContent = `${symbol}${netBalance.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}`;
+                elements.netDebtBalance.className = `text-3xl font-bold ${netBalance >= 0 ? 'text-green-600' : 'text-red-600'}`;
+            }
+
+            if (elements.totalDebts) {
+                elements.totalDebts.textContent = pendingDebts.length.toString();
+            }
+
+        } catch (error) {
+            console.error('Error updating debts summary:', error);
+        }
+    },
+
+    async updateDebtsLists() {
+        try {
+            const debts = await DebtsManager.fetchDebts();
+            const personFilter = document.getElementById('debtPersonFilter')?.value || '';
+            const typeFilter = document.getElementById('debtTypeFilter')?.value || '';
+            const statusFilter = document.getElementById('debtStatusFilter')?.value || '';
+
+            // Apply filters
+            let filteredDebts = debts;
+            if (personFilter) filteredDebts = filteredDebts.filter(d => d.person_name === personFilter);
+            if (typeFilter) filteredDebts = filteredDebts.filter(d => d.type === typeFilter);
+            if (statusFilter) filteredDebts = filteredDebts.filter(d => d.status === statusFilter);
+
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+
+            // Update person filter dropdown
+            const uniquePeople = [...new Set(debts.map(d => d.person_name))];
+            const personFilterElement = document.getElementById('debtPersonFilter');
+            if (personFilterElement) {
+                const currentValue = personFilterElement.value;
+                personFilterElement.innerHTML = '<option value="">All People</option>' +
+                    uniquePeople.map(person => `<option value="${person}">${person}</option>`).join('');
+                if (uniquePeople.includes(currentValue)) {
+                    personFilterElement.value = currentValue;
+                }
+            }
+
+            // Group debts by person
+            const peopleIOwe = {};
+            const peopleWhoOweMe = {};
+
+            filteredDebts.forEach(debt => {
+                if (debt.type === 'owe') {
+                    if (!peopleIOwe[debt.person_name]) peopleIOwe[debt.person_name] = [];
+                    peopleIOwe[debt.person_name].push(debt);
+                } else {
+                    if (!peopleWhoOweMe[debt.person_name]) peopleWhoOweMe[debt.person_name] = [];
+                    peopleWhoOweMe[debt.person_name].push(debt);
+                }
+            });
+
+            // Update "People I Owe" section
+            const peopleIOweElement = document.getElementById('peopleIOwe');
+            if (peopleIOweElement) {
+                peopleIOweElement.innerHTML = Object.keys(peopleIOwe).length === 0
+                    ? `<div class="text-center py-8">
+                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-50 dark:bg-red-900/20 mb-4">
+                            <i class="fas fa-hand-holding-usd text-2xl text-red-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No Outstanding Debts</h3>
+                        <p class="text-gray-500 dark:text-gray-400">You don't owe anyone money right now.</p>
+                    </div>`
+                    : Object.entries(peopleIOwe).map(([person, debts]) => {
+                        const totalAmount = debts.filter(d => d.status === 'pending').reduce((sum, d) => sum + Number(d.amount), 0);
+                        const pendingCount = debts.filter(d => d.status === 'pending').length;
+                        const oldestDebt = debts.filter(d => d.status === 'pending').sort((a, b) => new Date(a.created_date) - new Date(b.created_date))[0];
+                        const daysSince = oldestDebt ? Math.floor((new Date() - new Date(oldestDebt.created_date)) / (1000 * 60 * 60 * 24)) : 0;
+                        
+                        return `
+                            <div class="border border-red-200 dark:border-red-800 rounded-lg p-4 bg-red-50 dark:bg-red-900/10 hover:shadow-md transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-semibold text-sm">${person.charAt(0).toUpperCase()}</span>
+                                        </div>
+                                        <h4 class="font-semibold text-gray-900 dark:text-gray-100">${person}</h4>
+                                    </div>
+                                    <span class="text-red-600 dark:text-red-400 font-bold text-lg">${symbol}${totalAmount.toLocaleString('en-US', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    })}</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-600 dark:text-gray-400">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        ${pendingCount} debt${pendingCount !== 1 ? 's' : ''}
+                                    </span>
+                                    ${daysSince > 0 ? `
+                                        <span class="text-orange-600 dark:text-orange-400">
+                                            <i class="fas fa-calendar-times mr-1"></i>
+                                            ${daysSince} day${daysSince !== 1 ? 's' : ''} old
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                ${oldestDebt && oldestDebt.due_date ? `
+                                    <div class="mt-2 text-xs text-red-600 dark:text-red-400">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        Due: ${new Date(oldestDebt.due_date).toLocaleDateString()}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+            }
+
+            // Update "People Who Owe Me" section
+            const peopleWhoOweMeElement = document.getElementById('peopleWhoOweMe');
+            if (peopleWhoOweMeElement) {
+                peopleWhoOweMeElement.innerHTML = Object.keys(peopleWhoOweMe).length === 0
+                    ? `<div class="text-center py-8">
+                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-50 dark:bg-green-900/20 mb-4">
+                            <i class="fas fa-piggy-bank text-2xl text-green-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No Outstanding IOUs</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Nobody owes you money right now.</p>
+                    </div>`
+                    : Object.entries(peopleWhoOweMe).map(([person, debts]) => {
+                        const totalAmount = debts.filter(d => d.status === 'pending').reduce((sum, d) => sum + Number(d.amount), 0);
+                        const pendingCount = debts.filter(d => d.status === 'pending').length;
+                        const oldestDebt = debts.filter(d => d.status === 'pending').sort((a, b) => new Date(a.created_date) - new Date(b.created_date))[0];
+                        const daysSince = oldestDebt ? Math.floor((new Date() - new Date(oldestDebt.created_date)) / (1000 * 60 * 60 * 24)) : 0;
+                        
+                        return `
+                            <div class="border border-green-200 dark:border-green-800 rounded-lg p-4 bg-green-50 dark:bg-green-900/10 hover:shadow-md transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-semibold text-sm">${person.charAt(0).toUpperCase()}</span>
+                                        </div>
+                                        <h4 class="font-semibold text-gray-900 dark:text-gray-100">${person}</h4>
+                                    </div>
+                                    <span class="text-green-600 dark:text-green-400 font-bold text-lg">${symbol}${totalAmount.toLocaleString('en-US', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    })}</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-600 dark:text-gray-400">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        ${pendingCount} debt${pendingCount !== 1 ? 's' : ''}
+                                    </span>
+                                    ${daysSince > 0 ? `
+                                        <span class="text-orange-600 dark:text-orange-400">
+                                            <i class="fas fa-calendar-times mr-1"></i>
+                                            ${daysSince} day${daysSince !== 1 ? 's' : ''} old
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                ${oldestDebt && oldestDebt.due_date ? `
+                                    <div class="mt-2 text-xs text-green-600 dark:text-green-400">
+                                        <i class="fas fa-calendar-check mr-1"></i>
+                                        Due: ${new Date(oldestDebt.due_date).toLocaleDateString()}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+            }
+
+        } catch (error) {
+            console.error('Error updating debts lists:', error);
+        }
+    },
+
+    async updateAllDebtsTable() {
+        try {
+            const debts = await DebtsManager.fetchDebts();
+            const personFilter = document.getElementById('debtPersonFilter')?.value || '';
+            const typeFilter = document.getElementById('debtTypeFilter')?.value || '';
+            const statusFilter = document.getElementById('debtStatusFilter')?.value || '';
+
+            // Apply filters
+            let filteredDebts = debts;
+            if (personFilter) filteredDebts = filteredDebts.filter(d => d.person_name === personFilter);
+            if (typeFilter) filteredDebts = filteredDebts.filter(d => d.type === typeFilter);
+            if (statusFilter) filteredDebts = filteredDebts.filter(d => d.status === statusFilter);
+
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+
+            const allDebtsElement = document.getElementById('allDebts');
+            if (allDebtsElement) {
+                allDebtsElement.innerHTML = filteredDebts.map(debt => `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${debt.person_name}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">${debt.description || 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${debt.type === 'owe' ? 'text-red-600' : 'text-green-600'}">
+                            ${symbol}${Number(debt.amount).toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            })}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${debt.type === 'owe' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
+                                ${debt.type === 'owe' ? 'I Owe' : 'Owes Me'}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${debt.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}">
+                                ${debt.status === 'pending' ? 'Pending' : 'Paid'}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${new Date(debt.created_date).toLocaleDateString()}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${debt.due_date ? new Date(debt.due_date).toLocaleDateString() : 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                ${debt.status === 'pending' ? `
+                                    <button class="mark-paid-debt text-blue-600 hover:text-blue-900" data-id="${debt.id}" title="Mark as Paid">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                ` : ''}
+                                <button class="delete-debt text-red-600 hover:text-red-900" data-id="${debt.id}" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+
+                // Add event listeners for actions
+                document.querySelectorAll('.mark-paid-debt').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const id = button.dataset.id;
+                        try {
+                            await DebtsManager.updateDebtStatus(id, 'paid');
+                            await Promise.all([
+                                this.updateDebtsSummary(),
+                                this.updateDebtsLists(),
+                                this.updateAllDebtsTable()
+                            ]);
+                        } catch (error) {
+                            console.error('Error marking debt as paid:', error);
+                            alert('Failed to mark debt as paid. Please try again.');
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.delete-debt').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        if (confirm('Are you sure you want to delete this debt?')) {
+                            const id = button.dataset.id;
+                            try {
+                                await DebtsManager.deleteDebt(id);
+                                await Promise.all([
+                                    this.updateDebtsSummary(),
+                                    this.updateDebtsLists(),
+                                    this.updateAllDebtsTable()
+                                ]);
+                            } catch (error) {
+                                console.error('Error deleting debt:', error);
+                                alert('Failed to delete debt. Please try again.');
+                            }
+                        }
+                    });
+                });
+            }
+
+        } catch (error) {
+            console.error('Error updating all debts table:', error);
+        }
+    },
+
+    initializeSubscriptions() {
+        console.log('Initializing subscriptions...');
+        
+        // Initialize subscription modal
+        const modal = document.getElementById('subscriptionModal');
+        const addButton = document.getElementById('addSubscriptionBtn');
+        const closeButton = modal?.querySelector('.close-modal');
+        const form = document.getElementById('subscriptionForm');
+
+        if (!modal || !addButton || !closeButton || !form) {
+            console.error('Some subscription modal elements not found');
+            return;
+        }
+
+        // Initialize filters
+        this.initSubscriptionFilters();
+
+        // Handle add subscription button click
+        addButton.addEventListener('click', () => {
+            form.reset();
+            document.getElementById('subscriptionModalTitle').textContent = 'Add Subscription';
+            document.getElementById('subscriptionSubmitBtn').textContent = 'Save Subscription';
+            document.getElementById('subscriptionStatusContainer').style.display = 'none';
+            
+            // Set default next billing date to next month
+            const nextMonth = new Date();
+            nextMonth.setMonth(nextMonth.getMonth() + 1);
+            document.getElementById('subscriptionNextBilling').value = nextMonth.toISOString().split('T')[0];
+            
+            modal.classList.remove('hidden');
+        });
+
+        // Handle close button click
+        closeButton.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const subscriptionId = formData.get('subscription_id');
+            
+            const subscription = {
+                name: formData.get('name'),
+                cost: Number(formData.get('cost')),
+                billing_cycle: formData.get('billing_cycle'),
+                next_billing_date: formData.get('next_billing_date'),
+                category: formData.get('category'),
+                description: formData.get('description') || null,
+                status: formData.get('status') || 'active'
+            };
+
+            try {
+                if (subscriptionId) {
+                    await SubscriptionsManager.updateSubscription(subscriptionId, subscription);
+                } else {
+                    await SubscriptionsManager.addSubscription(subscription);
+                }
+                
+                // Update all subscription UI components
+                await this.updateSubscriptionsSummary();
+                await this.updateSubscriptionCategories();
+                await this.updateUpcomingPayments();
+                await this.updateAllSubscriptionsTable();
+                
+                modal.classList.add('hidden');
+                form.reset();
+                console.log('Subscription saved successfully');
+            } catch (error) {
+                console.error('Error saving subscription:', error);
+                alert('Failed to save subscription. Please try again.');
+            }
+        });
+
+        // Initial load of subscription data
+        this.loadSubscriptionData();
+
+        console.log('Subscriptions initialization complete');
+    },
+
+    initSubscriptionFilters() {
+        const filterInputs = [
+            'subscriptionCategoryFilter',
+            'subscriptionCycleFilter', 
+            'subscriptionStatusFilter'
+        ];
+
+        filterInputs.forEach(inputId => {
+            const element = document.getElementById(inputId);
+            if (element) {
+                element.addEventListener('change', async () => {
+                    await this.updateSubscriptionCategories();
+                    await this.updateUpcomingPayments();
+                    await this.updateAllSubscriptionsTable();
+                });
+            }
+        });
+
+        // Clear filters button
+        const clearButton = document.getElementById('clearSubscriptionFilters');
+        if (clearButton) {
+            clearButton.addEventListener('click', async () => {
+                filterInputs.forEach(inputId => {
+                    const element = document.getElementById(inputId);
+                    if (element) element.value = '';
+                });
+                await this.updateSubscriptionCategories();
+                await this.updateUpcomingPayments();
+                await this.updateAllSubscriptionsTable();
+            });
+        }
+    },
+
+    async loadSubscriptionData() {
+        console.log('Loading subscription data...');
+        try {
+            await this.updateSubscriptionsSummary();
+            await this.updateSubscriptionCategories();
+            await this.updateUpcomingPayments();
+            await this.updateAllSubscriptionsTable();
+            console.log('Subscription data loaded successfully');
+        } catch (error) {
+            console.error('Error loading subscription data:', error);
+        }
+    },
+
+    async updateSubscriptionsSummary() {
+        try {
+            const summary = await SubscriptionsManager.fetchSubscriptionsSummary();
+            
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+
+            // Update summary cards
+            const elements = {
+                totalActiveSubscriptions: document.getElementById('totalActiveSubscriptions'),
+                monthlySubscriptionCost: document.getElementById('monthlySubscriptionCost'),
+                yearlySubscriptionCost: document.getElementById('yearlySubscriptionCost'),
+                upcomingThisWeek: document.getElementById('upcomingThisWeek')
+            };
+
+            if (elements.totalActiveSubscriptions) {
+                elements.totalActiveSubscriptions.textContent = summary.total_active.toString();
+            }
+
+            if (elements.monthlySubscriptionCost) {
+                elements.monthlySubscriptionCost.textContent = `${symbol}${summary.monthly_cost.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}`;
+            }
+
+            if (elements.yearlySubscriptionCost) {
+                elements.yearlySubscriptionCost.textContent = `${symbol}${summary.yearly_cost.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}`;
+            }
+
+            if (elements.upcomingThisWeek) {
+                elements.upcomingThisWeek.textContent = summary.upcoming_this_week.toString();
+            }
+
+            console.log('Summary updated:', summary);
+        } catch (error) {
+            console.error('Error updating subscriptions summary:', error);
+        }
+    },
+
+    async updateSubscriptionCategories() {
+        try {
+            const subscriptions = await SubscriptionsManager.fetchSubscriptions();
+            const categoriesElement = document.getElementById('subscriptionCategories');
+            
+            if (!categoriesElement) return;
+
+            // Apply filters
+            const categoryFilter = document.getElementById('subscriptionCategoryFilter')?.value || '';
+            const cycleFilter = document.getElementById('subscriptionCycleFilter')?.value || '';
+            const statusFilter = document.getElementById('subscriptionStatusFilter')?.value || '';
+
+            let filteredSubscriptions = subscriptions;
+            if (categoryFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.category === categoryFilter);
+            if (cycleFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.billing_cycle === cycleFilter);
+            if (statusFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.status === statusFilter);
+
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+
+            // Calculate category breakdown from filtered subscriptions
+            const categoryBreakdown = {};
+            filteredSubscriptions.forEach(sub => {
+                const category = sub.category || 'Other';
+                if (!categoryBreakdown[category]) {
+                    categoryBreakdown[category] = { count: 0, monthly_cost: 0 };
+                }
+                
+                // Calculate monthly equivalent cost
+                let monthlyCost = 0;
+                const cost = Number(sub.cost);
+                switch (sub.billing_cycle) {
+                    case 'weekly':
+                        monthlyCost = cost * 4.33; // Average weeks per month
+                        break;
+                    case 'monthly':
+                        monthlyCost = cost;
+                        break;
+                    case 'quarterly':
+                        monthlyCost = cost / 3;
+                        break;
+                    case 'yearly':
+                        monthlyCost = cost / 12;
+                        break;
+                }
+                
+                categoryBreakdown[category].count++;
+                categoryBreakdown[category].monthly_cost += monthlyCost;
+            });
+
+            const categories = Object.entries(categoryBreakdown);
+            
+            if (categories.length === 0) {
+                categoriesElement.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-50 dark:bg-blue-900/20 mb-4">
+                            <i class="fas fa-chart-pie text-2xl text-blue-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No Categories Yet</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Add your first subscription to see category breakdown.</p>
+                    </div>
+                `;
+            } else {
+                categoriesElement.innerHTML = categories.map(([category, data]) => `
+                    <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <span class="font-medium text-gray-900 dark:text-gray-100">${category}</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-semibold text-gray-900 dark:text-gray-100">
+                                ${symbol}${data.monthly_cost.toLocaleString('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })}/mo
+                            </div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                ${data.count} subscription${data.count !== 1 ? 's' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+        } catch (error) {
+            console.error('Error updating subscription categories:', error);
+        }
+    },
+
+    async updateUpcomingPayments() {
+        try {
+            const subscriptions = await SubscriptionsManager.fetchSubscriptions();
+            const upcomingElement = document.getElementById('upcomingPayments');
+            
+            if (!upcomingElement) return;
+
+            // Apply filters first
+            const categoryFilter = document.getElementById('subscriptionCategoryFilter')?.value || '';
+            const cycleFilter = document.getElementById('subscriptionCycleFilter')?.value || '';
+            const statusFilter = document.getElementById('subscriptionStatusFilter')?.value || '';
+
+            let filteredSubscriptions = subscriptions;
+            if (categoryFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.category === categoryFilter);
+            if (cycleFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.billing_cycle === cycleFilter);
+            if (statusFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.status === statusFilter);
+
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+
+            // Filter for upcoming payments (next 30 days) and active subscriptions
+            const now = new Date();
+            const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+            
+            const upcomingPayments = filteredSubscriptions
+                .filter(sub => {
+                    // Apply status filter if not already applied, otherwise show all for upcoming
+                    const statusCheck = statusFilter ? true : sub.status === 'active';
+                    return statusCheck && new Date(sub.next_billing_date) <= thirtyDaysFromNow;
+                })
+                .sort((a, b) => new Date(a.next_billing_date) - new Date(b.next_billing_date));
+
+            if (upcomingPayments.length === 0) {
+                upcomingElement.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-orange-50 dark:bg-orange-900/20 mb-4">
+                            <i class="fas fa-calendar-check text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No Upcoming Payments</h3>
+                        <p class="text-gray-500 dark:text-gray-400">${categoryFilter || cycleFilter || statusFilter ? 'No payments matching current filters.' : 'All clear for the next 30 days!'}</p>
+                    </div>
+                `;
+            } else {
+                upcomingElement.innerHTML = upcomingPayments.map(sub => {
+                    const daysUntil = Math.ceil((new Date(sub.next_billing_date) - now) / (1000 * 60 * 60 * 24));
+                    const isOverdue = daysUntil < 0;
+                    const isDueSoon = daysUntil <= 7 && daysUntil >= 0;
+                    
+                    return `
+                        <div class="flex justify-between items-center p-3 border rounded-lg ${
+                            isOverdue ? 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/10' :
+                            isDueSoon ? 'border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/10' :
+                            'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800'
+                        }">
+                            <div>
+                                <div class="font-medium text-gray-900 dark:text-gray-100">${sub.name}</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">${sub.category} • ${sub.billing_cycle}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold ${
+                                    isOverdue ? 'text-red-600' : isDueSoon ? 'text-orange-600' : 'text-gray-900 dark:text-gray-100'
+                                }">
+                                    ${symbol}${Number(sub.cost).toLocaleString('en-US', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    })}
+                                </div>
+                                <div class="text-sm ${
+                                    isOverdue ? 'text-red-500' : isDueSoon ? 'text-orange-500' : 'text-gray-500'
+                                }">
+                                    ${isOverdue ? `${Math.abs(daysUntil)} days overdue` :
+                                      daysUntil === 0 ? 'Due today' :
+                                      `In ${daysUntil} day${daysUntil !== 1 ? 's' : ''}`}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+        } catch (error) {
+            console.error('Error updating upcoming payments:', error);
+        }
+    },
+
+    async updateAllSubscriptionsTable() {
+        try {
+            const subscriptions = await SubscriptionsManager.fetchSubscriptions();
+            const categoryFilter = document.getElementById('subscriptionCategoryFilter')?.value || '';
+            const cycleFilter = document.getElementById('subscriptionCycleFilter')?.value || '';
+            const statusFilter = document.getElementById('subscriptionStatusFilter')?.value || '';
+
+            // Apply filters
+            let filteredSubscriptions = subscriptions;
+            if (categoryFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.category === categoryFilter);
+            if (cycleFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.billing_cycle === cycleFilter);
+            if (statusFilter) filteredSubscriptions = filteredSubscriptions.filter(s => s.status === statusFilter);
+
+            const currency = localStorage.getItem('currency') || 'USD';
+            const currencySymbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'INR': '₹'
+            };
+            const symbol = currencySymbols[currency];
+
+            const allSubscriptionsElement = document.getElementById('allSubscriptions');
+            if (allSubscriptionsElement) {
+                allSubscriptionsElement.innerHTML = filteredSubscriptions.map(sub => {
+                    const nextPayment = new Date(sub.next_billing_date);
+                    const isOverdue = nextPayment < new Date();
+                    
+                    return `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">${sub.name}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${sub.category}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                                ${symbol}${Number(sub.cost).toLocaleString('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                <span class="capitalize">${sub.billing_cycle}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm ${isOverdue ? 'text-red-600' : 'text-gray-900 dark:text-gray-100'}">
+                                ${nextPayment.toLocaleDateString()}
+                                ${isOverdue ? '<span class="text-xs text-red-500 block">Overdue</span>' : ''}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                    sub.status === 'active' ? 'bg-green-100 text-green-800' :
+                                    sub.status === 'paused' ? 'bg-yellow-100 text-yellow-800' :
+                                    'bg-gray-100 text-gray-800'
+                                }">
+                                    ${sub.status}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-2">
+                                    <button class="edit-subscription text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" data-id="${sub.id}" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="delete-subscription text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" data-id="${sub.id}" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Add event listeners for actions
+                document.querySelectorAll('.edit-subscription').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const id = button.dataset.id;
+                        const subscription = filteredSubscriptions.find(s => s.id == id);
+                        if (subscription) {
+                            this.populateSubscriptionForm(subscription);
+                            document.getElementById('subscriptionModalTitle').textContent = 'Edit Subscription';
+                            document.getElementById('subscriptionSubmitBtn').textContent = 'Update Subscription';
+                            document.getElementById('subscriptionStatusContainer').style.display = 'block';
+                            document.getElementById('subscriptionModal').classList.remove('hidden');
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.delete-subscription').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        if (confirm('Are you sure you want to delete this subscription?')) {
+                            const id = button.dataset.id;
+                            try {
+                                await SubscriptionsManager.deleteSubscription(id);
+                                await this.loadSubscriptionData();
+                            } catch (error) {
+                                console.error('Error deleting subscription:', error);
+                                alert('Failed to delete subscription. Please try again.');
+                            }
+                        }
+                    });
+                });
+            }
+
+            console.log('Subscriptions table updated with', filteredSubscriptions.length, 'items');
+        } catch (error) {
+            console.error('Error updating all subscriptions table:', error);
+        }
+    },
+
+    populateSubscriptionForm(subscription) {
+        document.getElementById('subscriptionId').value = subscription.id;
+        document.getElementById('subscriptionName').value = subscription.name;
+        document.getElementById('subscriptionCost').value = subscription.cost;
+        document.getElementById('subscriptionBillingCycle').value = subscription.billing_cycle;
+        document.getElementById('subscriptionCategory').value = subscription.category;
+        document.getElementById('subscriptionNextBilling').value = subscription.next_billing_date;
+        document.getElementById('subscriptionStatus').value = subscription.status;
+        document.getElementById('subscriptionDescription').value = subscription.description || '';
     }
 };
 
 // Initialize the application when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     UIManager.init();
+    UIManager.initializeExpenseLimits();
 }); 

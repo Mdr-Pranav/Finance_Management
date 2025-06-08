@@ -26,15 +26,17 @@ async function initializeDatabase() {
             )
         `);
 
-        // Create budgets table
+        // Create expense_limits table
         await pool.query(`
-            CREATE TABLE IF NOT EXISTS budgets (
+            CREATE TABLE IF NOT EXISTS expense_limits (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 category VARCHAR(50) NOT NULL,
-                amount DECIMAL(10,2) NOT NULL,
+                limit_amount DECIMAL(10,2) NOT NULL,
+                period_type ENUM('monthly', 'yearly', 'custom') NOT NULL DEFAULT 'monthly',
                 start_date DATE NOT NULL,
                 end_date DATE NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY unique_category_period (category, start_date, end_date)
             )
         `);
 
@@ -51,7 +53,41 @@ async function initializeDatabase() {
             )
         `);
 
-        console.log('Database initialized successfully');
+        // Create debts table
+        await pool.execute(`
+            CREATE TABLE IF NOT EXISTS debts (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                person_name VARCHAR(255) NOT NULL,
+                amount DECIMAL(10,2) NOT NULL,
+                description TEXT,
+                type ENUM('owe', 'owed') NOT NULL,
+                created_date DATE NOT NULL,
+                due_date DATE,
+                status ENUM('pending', 'paid') DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('Debts table created successfully');
+
+        // Create subscriptions table
+        await pool.execute(`
+            CREATE TABLE IF NOT EXISTS subscriptions (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                cost DECIMAL(10,2) NOT NULL,
+                billing_cycle ENUM('weekly', 'monthly', 'quarterly', 'yearly') NOT NULL DEFAULT 'monthly',
+                next_billing_date DATE NOT NULL,
+                category VARCHAR(100) DEFAULT 'Entertainment',
+                description TEXT,
+                status ENUM('active', 'paused', 'cancelled') DEFAULT 'active',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('Subscriptions table created successfully');
+
+        console.log('Database initialization completed');
     } catch (error) {
         console.error('Error initializing database:', error);
         throw error;
